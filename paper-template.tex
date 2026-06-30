@@ -1,12 +1,11 @@
 %==============================================================================
 %  ACADEMIC PAPER TEMPLATE  (article + online supplement)
 %------------------------------------------------------------------------------
-%  Derived from the manuscript styling of
-%      J. Lucas Reddinger, "Temptation: Immediacy and certainty".
-%
-%  It reproduces that paper's preamble, custom commands, title page, and
-%  online-supplement machinery, but with generic placeholder content so you
-%  can drop in a new paper. Search for "TODO" to find what to replace.
+%  A journal-style article with an optional online supplement. The preamble
+%  provides the title page, custom commands, citation and cross-reference
+%  setup, theorem/float configuration, and supplement machinery; the body is a
+%  short, self-contained example paper that exercises each feature. Replace the
+%  metadata and the example content with your own.
 %
 %  COMPILE (bibliography uses biblatex + biber):
 %      latexmk -pdf paper-template.tex
@@ -16,9 +15,9 @@
 %      pdflatex paper-template
 %      pdflatex paper-template
 %
-%  By default this file uses Minion Pro (a commercial font), matching the
-%  source paper. If it is not installed, switch to the free Charter stack in
-%  the "Font face packages" block below and it builds on any TeX Live / MiKTeX.
+%  By default this file uses Minion Pro (a commercial font). If it is not
+%  installed, switch to the free Charter stack in the "Font face packages"
+%  block below and it builds on any TeX Live / MiKTeX.
 %==============================================================================
 
 \documentclass[
@@ -29,15 +28,15 @@
 %%%% Font face packages -------------------------------------------------------
 %
 %  Three interchangeable stacks. EXACTLY ONE must be active (uncommented).
-%  Stack 1 (Minion Pro) is the default, matching the source paper.
+%  Stack 1 (Minion Pro) is the default.
 %
 %  The %%arxiv-font%% / %%not-arxiv-font%% tags let a build script swap stacks
 %  automatically (e.g. the free stack 2 for an arXiv upload, Minion Pro for the
 %  camera-ready). Keep them if you use such a script; otherwise ignore.
 
 % 1. Minion Pro + Source Sans Pro + Inconsolata   <-- DEFAULT
-%    Minion Pro is a commercial serif; it must be installed (it is, in the
-%    environment this template came from). Switch to stack 2 for a free build.
+%    Minion Pro is a commercial serif and must be installed separately. Switch
+%    to stack 2 for a fully free build.
 \usepackage{newtxmath}                                  % math  %%not-arxiv-font%%
 \usepackage[fullfamily,swash,lf,mathtabular]{MinionPro} % serif %%not-arxiv-font%%
 \usepackage[semibold,scaled=0.95]{sourcesanspro}        % sans  %%not-arxiv-font%%
@@ -67,8 +66,7 @@
 \usepackage{ragged2e}
 \usepackage{booktabs}
 \usepackage{ntheorem}
-% Warning: uniquelist=false would violate the Chicago Manual of Style.
-% CMOS opposes use of an ibidem mechanism, hence noibid.
+% noibid: CMOS author-date style opposes an ibidem mechanism.
 \usepackage[backend=biber,authordate,noibid]{biblatex-chicago}
 \usepackage{footmisc} % Must load this after biblatex-chicago.
 % One neutral link color avoids the visual clutter of type-coded links.
@@ -243,9 +241,9 @@
 
 %%%% Metadata -----------------------------------------------------------------
 
-\newcommand{\papertitle}{The paper title: An optional subtitle}  % TODO (sentence case)
-\newcommand{\paperauthor}{First M.~Last}                         % TODO
-\newcommand{\paperdate}{20 June 2026}                           % day month year
+\newcommand{\papertitle}{Commitment and present bias: Experimental evidence}
+\newcommand{\paperauthor}{First M.~Last}
+\newcommand{\paperdate}{30 June 2026}
 
 
 \begin{document}
@@ -261,17 +259,17 @@
 
 \begin{center}% begin centered title
 
-\textbf{\sffamily\LARGE \papertitle\symfootnote{TODO acknowledgements: thank
-colleagues, seminar audiences, funders, and IRB/registration details here.
-Cite with the usual commands, e.g.\ \textcite{RoeSmith2019} provide data and
-code.}}
+\textbf{\sffamily\LARGE \papertitle\symfootnote{For helpful comments I thank
+seminar audiences and colleagues; \textcite{RoeSmith2019} generously shared
+data and code. This study was approved under IRB protocol 0000 and
+pre-registered at the AEA RCT Registry (AEARCTR-0000000).}}
 
 \vfill
 
 {\large
 
-\paperauthor\symfootnote{TODO affiliation: Department, University, mailing
-address; \href{mailto:you@example.edu}{you@example.edu}.}
+\paperauthor\symfootnote{Department of Economics, Example University, 100
+University Drive, City, ST 00000; \href{mailto:you@example.edu}{you@example.edu}.}
 
 \vspace{\baselineskip}
 
@@ -290,18 +288,22 @@ address; \href{mailto:you@example.edu}{you@example.edu}.}
 \vspace{-1\baselineskip}
 
 \paragraph{Abstract}
-TODO. One paragraph stating the question, method, and headline finding. Keep it
-self-contained: a reader should grasp the contribution without the body. End
-with the takeaway or implication.
+People routinely plan to act patiently and then favor the immediate reward when
+the moment arrives. In a laboratory experiment, participants make a sequence of
+intertemporal allocation decisions under one of two conditions. We estimate a
+quasi-hyperbolic discounting model and find that the treatment lowers the
+present-bias parameter and raises demand for a commitment device. The results
+suggest that small changes in choice architecture can meaningfully shift
+self-control.
 
 \vfill
 \vspace{-1\baselineskip}
 
 {\RaggedRight
 
-\paragraph{\emph{JEL} Codes} C91, D80, D90 % TODO
+\paragraph{\emph{JEL} Codes} C91, D15, D91
 
-\paragraph{Keywords} keyword one, keyword two, keyword three, keyword four % TODO
+\paragraph{Keywords} present bias, commitment, intertemporal choice, laboratory experiment
 
 }
 
@@ -309,16 +311,15 @@ with the takeaway or implication.
 
 \clearpage
 
-% Switch the main text to 1.5 line spacing. \setstretch sets the spacing from
-% here on (within the document) without opening a group, unlike the bare
-% \spacing{} command, which the source paper used.
+% 1.5 line spacing for the body.
 \setstretch{1.5}
 
 \section{Introduction}\label{sec:intro}
 
-TODO. Open with the motivating question and why it matters. This template
-preserves the source paper's formatting machinery; the prose below only
-demonstrates how to use it.
+People often plan to act patiently and then choose the immediate reward when
+the moment arrives. We ask whether a simple change in how future rewards are
+presented amplifies this present bias, and whether it raises the demand for
+commitment devices.
 
 Cite in parentheses with \parencite{Doe2020}, or in text with
 \textcite{LeeKimPark2021}. Multiple sources collapse neatly:
@@ -330,8 +331,9 @@ equations, tables, and figures with \texttt{cleveref}: see \cref{sec:model},
 
 \section{Model}\label{sec:model}
 
-TODO. State the framework. The indicator macro \verb|\mybb{1}(...)| typesets a
-blackboard ``1'', e.g.\ $\mybb{1}(x>0)$. A displayed, labelled equation:%
+A decision maker values a stream of consumption using quasi-hyperbolic discount
+factors. The indicator macro \verb|\mybb{1}(...)| typesets a blackboard ``1'',
+e.g.\ $\mybb{1}(x>0)$. The objective is a displayed, labelled equation:%
 \begin{align}
     U_t &= u(x_t) + \beta \sum_{\tau=1} \delta^\tau\, u(x_{t+\tau}).
     \label{eq:objective}
@@ -348,12 +350,12 @@ State each pre-registered prediction in the \texttt{hypothesis} environment so
 it is numbered and \texttt{cleveref}-referable (see \cref{hyp:main}):
 
 \begin{hypothesis}\label{hyp:main}
-TODO. The primary testable prediction, e.g.\ $\beta_{\text{treat}} <
-\beta_{\text{control}}$.
+The treatment lowers the present-bias parameter relative to the control:
+$\beta_{\text{treat}} < \beta_{\text{control}}$.
 \end{hypothesis}
 
 \begin{hypothesis}\label{hyp:secondary}
-TODO. A secondary prediction.
+Participants in the treatment are more likely to take up the commitment device.
 \end{hypothesis}
 
 \section{Methodology}\label{sec:method}
@@ -361,9 +363,11 @@ TODO. A secondary prediction.
 A custom-labelled enumeration (e.g.\ for a multi-step estimation procedure):
 
 \begin{enumerate}[label=\textbf{\sffamily Step \arabic*:}, align=left, leftmargin=*]
-    \item TODO. Describe the first step.
-    \item TODO. Describe the second step. To attribute a method to two authors
-    with an en-dash, use \textcitedash{RoeSmith2019} standard errors.
+    \item Estimate $\beta$ and $\delta$ for each participant by maximum
+    likelihood from the allocation choices.
+    \item Compare the estimated $\beta$ across conditions, reporting
+    \textcitedash{RoeSmith2019} standard errors to account for the two-stage
+    estimator.
 \end{enumerate}
 
 \section{Results}\label{sec:results}
@@ -385,8 +389,9 @@ A custom-labelled enumeration (e.g.\ for a multi-step estimation procedure):
     \bottomrule
     \end{tabular}
     \begin{tablenotes}\footnotesize
-      \emph{Note:} TODO. Numbers in the \texttt{d\{1.3\}} columns align on the
-      decimal point; wrap headers and integer cells in \verb|\multicolumn{1}{c}{...}|.
+      \emph{Note:} Estimated treatment effects, with standard errors in the row
+      below. Numbers in the \texttt{d\{1.3\}} columns align on the decimal
+      point; wrap headers and integer cells in \verb|\multicolumn{1}{c}{...}|.
     \end{tablenotes}
   \end{threeparttable}
 \end{table}
@@ -408,7 +413,7 @@ A custom-labelled enumeration (e.g.\ for a multi-step estimation procedure):
 \end{figure}
 
 % ---- Dropping in externally generated assets (R / Stata / Python) ----------
-% Mirror the source paper: \input a booktabs/threeparttable .tex for tables and
+% A common pattern: \input a booktabs/threeparttable .tex for tables and
 % a pgfplots/TikZ .tex (or \includegraphics a PDF) for figures. The \makebox
 % lets a wide table or figure overrun the text block, centered:
 %
@@ -427,8 +432,10 @@ A custom-labelled enumeration (e.g.\ for a multi-step estimation procedure):
 
 \section{Conclusion}\label{sec:conclusion}
 
-TODO. Restate the contribution, note limitations, and point to implications and
-future work.
+A simple change in how future rewards are presented shifts the estimated
+present-bias parameter and raises commitment demand. We note the usual caveats
+of a single laboratory sample and point to field replication as the natural
+next step.
 
 \vspace{1\baselineskip}
 
@@ -499,17 +506,16 @@ future work.
 
 \suppsection{First supplement section}\label{sec:supp:first}
 
-TODO. Supplement sections are numbered S.1, S.2, \ldots\ and appear in the
-contents above. Reference them like \cref{sec:supp:first} or
-\cref{sec:supp:second}.
+Supplement sections are numbered S.1, S.2, \ldots\ and appear in the contents
+above. Reference them like \cref{sec:supp:first} or \cref{sec:supp:second}.
 
 \suppsubsection{A subsection}\label{sec:supp:first:sub}
 
-TODO. Numbered S.1.1.
+Numbered S.1.1.
 
 \suppsubsubsection{A sub-subsection}
 
-TODO. Numbered S.1.1.1 (not added to the contents by default).
+Numbered S.1.1.1 (not added to the contents by default).
 
 \suppsection{Additional results}\label{sec:supp:second}
 
@@ -528,7 +534,7 @@ Supplement floats are numbered with an ``S.'' prefix automatically: see
     \bottomrule
     \end{tabular}
     \begin{tablenotes}\footnotesize
-      \emph{Note:} TODO.
+      \emph{Note:} An example supplementary table.
     \end{tablenotes}
   \end{threeparttable}
 \end{table}

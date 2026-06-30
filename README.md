@@ -1,16 +1,16 @@
 # Academic paper template
 
-A reusable LaTeX template for a journal-style article **with an online
-supplement**, distilled from the manuscript styling of *"Temptation: Immediacy
-and certainty."* It keeps that paper's preamble, custom commands, title page,
-and supplement machinery, but ships with generic placeholder content so you can
-start a new paper immediately.
+A reusable LaTeX template for a journal-style article **with an optional online
+supplement**. It provides a configured preamble (fonts, citations,
+cross-references, theorem and float setup), a title page, custom commands, and
+supplement machinery, wrapped around a short example paper you replace with your
+own content.
 
 ## Files
 
 | File | Purpose |
 |------|---------|
-| `paper-template.tex` | The template. Search for `TODO` to find what to replace. |
+| `paper-template.tex` | The template: a short example paper you replace with your own. |
 | `references.bib` | Example bibliography (biblatex format). Replace with yours. |
 | `paper-template.pdf` | Rendered preview of the template as-is. |
 
@@ -35,17 +35,16 @@ pdflatex paper-template
 `lualatex`/`xelatex` work too (swap the engine in latexmk with `-lualatex`).
 
 Tested with TeX Live 2025. The default font stack is **Minion Pro** (commercial;
-installed in the environment this template came from). If it is not installed,
-switch to the free Charter stack (see **Fonts**) and it builds on any current
-TeX Live / MiKTeX.
+must be installed separately). If it is not installed, switch to the free Charter
+stack (see **Fonts**) and it builds on any current TeX Live / MiKTeX.
 
 ## Fonts
 
 The "Font face packages" block near the top offers three interchangeable stacks;
 exactly one is active:
 
-1. **Minion Pro** + Source Sans Pro + Inconsolata — **default**, matching the
-   source paper. Minion Pro is **commercial** and must be installed.
+1. **Minion Pro** + Source Sans Pro + Inconsolata — **default**. Minion Pro is
+   **commercial** and must be installed.
 2. **Charter / XCharter** + Source Sans Pro + Inconsolata — 100%-free fallback
    (e.g. for arXiv or a machine without Minion Pro). *(commented out)*
 3. **TeX Gyre Pagella** (Palatino) + TeX Gyre Heros + Inconsolata. *(commented out)*
@@ -91,7 +90,7 @@ S.1, S.1.1, S.1.1.1.
 ## Customization checklist
 
 1. Set `\papertitle`, `\paperauthor`, `\paperdate` in the **Metadata** block.
-2. Replace every `TODO` (title-page notes, abstract, JEL, keywords, body, supplement).
+2. Replace the example content (title-page notes, abstract, JEL, keywords, body, supplement).
 3. Put your references in `references.bib`.
 4. Point the **Paths** block (`\input@path`, `\graphicspath`) at your `tables/`
    and `figures/` folders, then `\input{...}` generated tables and
@@ -108,6 +107,3 @@ S.1, S.1.1, S.1.1.1.
   `tabfigures`, `threeparttable`, `dcolumn`, `subfig`, `pgfplots`, `contour`,
   `adjustbox`. If `tabfigures` is missing, comment out its `\usepackage` line —
   it only governs lining vs. old-style digits.
-- The source paper used a bare `\spacing{1.5}` to switch line spacing; this
-  template uses the equivalent `\setstretch{1.5}`, which produces identical
-  output without the "`\end occurred inside a group`" warning.
