@@ -96,23 +96,13 @@
 % Loaded [pass] so it does not disturb the main text's KOMA DIV type-area;
 % the supplement then switches to 1in margins via \newgeometry.
 \usepackage[pass]{geometry}
+\usepackage{graphicx}
 
 
 %%%% Custom packages ----------------------------------------------------------
 
-% For the main text
-\usepackage{standalone}
-\usepackage{tabulary}
-\usepackage{subfig}
 \usepackage{tikz}
-\usepackage{pgfplots}
-\usepackage[outline]{contour}
-\usepackage{multicol}
 
-% For the supplement
-\usepackage{tabularx}
-\usepackage{adjustbox}
-\usepackage{rotating}
 
 
 %%%% Boilerplate configuration ------------------------------------------------
@@ -186,11 +176,7 @@
 
 %%%% Custom configuration -----------------------------------------------------
 
-\setlength{\columnsep}{24pt}
-%%%% tikz / pgfplots
-\pgfplotsset{compat=1.16}
-\usetikzlibrary{calc}
-\contourlength{2pt}
+
 
 
 %%%% Supplement table of contents ---------------------------------------------
@@ -407,20 +393,13 @@ A custom-labelled enumeration (e.g.\ for a multi-step estimation procedure):
   \end{threeparttable}
 \end{table}
 
-% ---- Figure: two TikZ panels via subfig (self-contained, no external files) -
+% ---- Figure: TikZ panel (self-contained, no external files) -
 \begin{figure}\centering
-  \subfloat[First panel\label{fig:example-a}]{%
-    \begin{tikzpicture}
-      \draw[thick] (0,0) rectangle (4,3);
-      \node at (2,1.5) {panel A placeholder};
-    \end{tikzpicture}}
-  \hfill
-  \subfloat[Second panel\label{fig:example-b}]{%
-    \begin{tikzpicture}
-      \draw[thick] (0,0) rectangle (4,3);
-      \node at (2,1.5) {panel B placeholder};
-    \end{tikzpicture}}
-  \caption{Example figure with two panels\label{fig:example}}
+  \begin{tikzpicture}
+    \draw[thick] (0,0) rectangle (6,3);
+    \node at (3,1.5) {figure placeholder};
+  \end{tikzpicture}
+  \caption{Example figure\label{fig:example}}
 \end{figure}
 
 % ---- Dropping in externally generated assets (R / Stata / Python) ----------
@@ -531,7 +510,7 @@ Numbered S.1.1.1 (not added to the contents by default).
 \suppsection{Additional results}\label{sec:supp:second}
 
 Supplement floats are numbered with an ``S.'' prefix automatically: see
-\cref{tbl:supp-example} and \cref{fig:supp-example}.
+\cref{tbl:supp-example}.
 
 \begin{table}[h]\centering
   \begin{threeparttable}
@@ -549,13 +528,5 @@ Supplement floats are numbered with an ``S.'' prefix automatically: see
     \end{tablenotes}
   \end{threeparttable}
 \end{table}
-
-\begin{figure}[h]\centering
-  \begin{tikzpicture}
-    \draw[thick] (0,0) rectangle (6,3);
-    \node at (3,1.5) {supplement figure placeholder};
-  \end{tikzpicture}
-  \caption{A supplementary figure\label{fig:supp-example}}
-\end{figure}
 
 \end{document}
