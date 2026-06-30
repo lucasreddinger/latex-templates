@@ -1,0 +1,543 @@
+%==============================================================================
+%  ACADEMIC PAPER TEMPLATE  (article + online supplement)
+%------------------------------------------------------------------------------
+%  Derived from the manuscript styling of
+%      J. Lucas Reddinger, "Temptation: Immediacy and certainty".
+%
+%  It reproduces that paper's preamble, custom commands, title page, and
+%  online-supplement machinery, but with generic placeholder content so you
+%  can drop in a new paper. Search for "TODO" to find what to replace.
+%
+%  COMPILE (bibliography uses biblatex + biber):
+%      latexmk -pdf paper-template.tex
+%  or manually:
+%      pdflatex paper-template      (alias: lualatex / xelatex also work)
+%      biber    paper-template
+%      pdflatex paper-template
+%      pdflatex paper-template
+%
+%  By default this file uses Minion Pro (a commercial font), matching the
+%  source paper. If it is not installed, switch to the free Charter stack in
+%  the "Font face packages" block below and it builds on any TeX Live / MiKTeX.
+%==============================================================================
+
+\documentclass[
+    fontsize=12pt,DIV=10,fleqn,
+    letterpaper,oneside,paper=portrait,
+]{scrartcl}
+
+%%%% Font face packages -------------------------------------------------------
+%
+%  Three interchangeable stacks. EXACTLY ONE must be active (uncommented).
+%  Stack 1 (Minion Pro) is the default, matching the source paper.
+%
+%  The %%arxiv-font%% / %%not-arxiv-font%% tags let a build script swap stacks
+%  automatically (e.g. the free stack 2 for an arXiv upload, Minion Pro for the
+%  camera-ready). Keep them if you use such a script; otherwise ignore.
+
+% 1. Minion Pro + Source Sans Pro + Inconsolata   <-- DEFAULT
+%    Minion Pro is a commercial serif; it must be installed (it is, in the
+%    environment this template came from). Switch to stack 2 for a free build.
+\usepackage{newtxmath}                                  % math  %%not-arxiv-font%%
+\usepackage[fullfamily,swash,lf,mathtabular]{MinionPro} % serif %%not-arxiv-font%%
+\usepackage[semibold,scaled=0.95]{sourcesanspro}        % sans  %%not-arxiv-font%%
+\usepackage[scaled=1.04,varqu,varl]{inconsolata}        % mono  %%not-arxiv-font%%
+
+% 2. Charter + Source Sans Pro + Inconsolata   (free fallback, e.g. for arXiv)
+%\usepackage[charter]{mathdesign}                        % math  %%arxiv-font%%
+%\usepackage[sups,osf]{XCharter}                         % serif %%arxiv-font%%
+%\usepackage[semibold]{sourcesanspro}                    % sans  %%arxiv-font%%
+%\usepackage[scaled=1.04,varqu,varl]{inconsolata}        % mono  %%arxiv-font%%
+
+% 3. TeX Gyre Pagella (Palatino) + TeX Gyre Heros + Inconsolata + newtx math
+%\usepackage{newtxmath}                                  % math
+%\usepackage{tgpagella}                                  % serif
+%\usepackage{tgheros}                                    % sans
+%\usepackage[scaled=1.04,varqu,varl]{inconsolata}        % mono
+
+
+%%%% Boilerplate packages -----------------------------------------------------
+
+\usepackage{scrlayer-scrpage} %%KOMA%%
+\usepackage{mathtools}
+% tabfigures forces lining (tabular) digits in equations/lists/line numbers
+% even when the text font uses old-style figures. Comment out if not installed.
+\usepackage[eqno,enum,lineno]{tabfigures}
+\usepackage{setspace}
+\usepackage{ragged2e}
+\usepackage{booktabs}
+\usepackage{ntheorem}
+% Warning: uniquelist=false would violate the Chicago Manual of Style.
+% CMOS opposes use of an ibidem mechanism, hence noibid.
+\usepackage[backend=biber,authordate,noibid]{biblatex-chicago}
+\usepackage{footmisc} % Must load this after biblatex-chicago.
+% One neutral link color avoids the visual clutter of type-coded links.
+% Coloring the border (not the text) keeps printed text black.
+\usepackage[allbordercolors={0.8 0.8 1}]{hyperref}
+% nameinlink makes the whole "Figure 1" a link; noabbrev avoids "fig."
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage{microtype} % improves optical fit
+
+
+%%%% Common packages ----------------------------------------------------------
+
+\usepackage[para,flushleft]{threeparttable}
+\usepackage{dcolumn}
+\usepackage{enumitem}
+% Loaded [pass] so it does not disturb the main text's KOMA DIV type-area;
+% the supplement then switches to 1in margins via \newgeometry.
+\usepackage[pass]{geometry}
+
+
+%%%% Custom packages ----------------------------------------------------------
+
+% For the main text
+\usepackage{standalone}
+\usepackage{tabulary}
+\usepackage{subfig}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage[outline]{contour}
+\usepackage{multicol}
+
+% For the supplement
+\usepackage{tabularx}
+\usepackage{adjustbox}
+\usepackage{rotating}
+
+
+%%%% Boilerplate configuration ------------------------------------------------
+
+% Fix page-number positioning under line spacing %%KOMA%%
+\KOMAoptions{onpsinit={\linespread{1}\selectfont}}
+
+% Match \RaggedRight paragraph indent to the normal indent
+\setlength{\RaggedRightParindent}{\parindent}
+
+% Allow math to break across pages
+\allowdisplaybreaks[1]
+
+% A "Hypothesis" theorem environment (sans-serif bold header)
+\theoremheaderfont{\normalfont\sffamily\bfseries}
+\newtheorem{hypothesis}{Hypothesis}
+\crefname{hypothesis}{Hypothesis}{Hypotheses}
+\Crefname{hypothesis}{Hypothesis}{Hypotheses}
+
+% \citeyearlinked{key}: prints (and links) only the year of a reference
+\DeclareCiteCommand{\citeyearlinked}
+  {\boolfalse{citetracker}%
+   \boolfalse{pagetracker}%
+   \usebibmacro{prenote}}
+  {\ifciteindex
+     {\indexfield{indextitle}}
+     {}%
+   \printtext[bibhyperref]{\printfield[citeyear]{labelyear}}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+% \textcitedash{key}: like \textcite but en-dashes co-authors' names,
+% e.g. "Murphy-Topel standard errors" -> "Murphy--Topel standard errors".
+\newcommand{\textcitedash}[1]{%
+  {%
+  \DeclareDelimFormat{finalnamedelim}{\textendash}%
+  \textcite{#1}%
+  }%
+}
+
+% \symfootnote{...}: symbolic footnotes (*, dagger, ...) counted separately
+% from numbered footnotes. Handy for title-page acknowledgements/affiliations.
+\newcounter{savefootnote}
+\newcounter{symfootnote}
+\newcommand{\symfootnote}[1]{%
+  \setcounter{savefootnote}{\value{footnote}}%
+  \setcounter{footnote}{\value{symfootnote}}%
+  \ifnum\value{footnote}>8\setcounter{footnote}{0}\fi%
+  \let\oldthefootnote=\thefootnote%
+  \renewcommand{\thefootnote}{\fnsymbol{footnote}}%
+  \footnote{#1}%
+  \let\thefootnote=\oldthefootnote%
+  \setcounter{symfootnote}{\value{footnote}}%
+  \setcounter{footnote}{\value{savefootnote}}%
+}
+
+
+%%%% Common configuration -----------------------------------------------------
+
+% \mybb{1} -> blackboard-bold digit, for indicator functions like \mybb{1}(d=2).
+% Minion Pro's math lacks a blackboard "1", so this pulls the glyph from the
+% doublestroke font (requires the dsserif package, which is installed).
+\newcommand{\mybb}[1]{{\text{{\usefont{U}{DSSerif}{m}{n}#1}}}}
+% Free-font fallback if you switch stacks: \usepackage{dsfont} above, then use
+%\newcommand{\mybb}[1]{\mathds{#1}}
+
+% A dcolumn type "d" that aligns numbers on the decimal point, e.g. d{2.3}
+\newcolumntype{d}[1]{D{.}{.}{#1}}
+
+
+%%%% Custom configuration -----------------------------------------------------
+
+\setlength{\columnsep}{24pt}
+%%%% tikz / pgfplots
+\pgfplotsset{compat=1.16}
+\usetikzlibrary{calc}
+\contourlength{2pt}
+
+
+%%%% Supplement table of contents ---------------------------------------------
+
+% Suppress TOC entries for the main text (the supplement gets its own TOC).
+\AtBeginDocument{%
+  \addtocontents{toc}{\protect\setcounter{tocdepth}{-1}}%
+}
+
+
+%%%% Supplement sectioning -----------------------------------------------------
+%
+%  \suppsection / \suppsubsection / \suppsubsubsection number the online
+%  supplement as S.1, S.1.1, S.1.1.1 and add the first two levels to the TOC.
+%  \cref/\Cref refer to them as "supplement section S.1", etc.
+
+\newcounter{suppsection}
+\crefname{suppsection}{supplement section}{supplement sections}
+\Crefname{suppsection}{Supplement section}{Supplement sections}
+\renewcommand{\thesuppsection}{\arabic{suppsection}} % \cref number: "1"
+\newcommand{\suppsection}[1]{%
+    \refstepcounter{suppsection}%
+    \section*{S.\thesuppsection\quad #1}% display: "S.1"
+    \addcontentsline{toc}{section}{S.\thesuppsection\quad #1}%
+}
+
+\newcounter{suppsubsection}[suppsection] % linked to the suppsection counter
+\crefname{suppsubsection}{supplement subsection}{supplement subsections}
+\Crefname{suppsubsection}{Supplement subsection}{Supplement subsections}
+\renewcommand{\thesuppsubsection}{\thesuppsection.\arabic{suppsubsection}} % "1.1"
+\newcommand{\suppsubsection}[1]{%
+    \refstepcounter{suppsubsection}%
+    \subsection*{S.\thesuppsubsection\quad #1}% display: "S.1.1"
+    \addcontentsline{toc}{subsection}{S.\thesuppsubsection\quad #1}%
+}
+
+\newcounter{suppsubsubsection}[suppsubsection] % linked to suppsubsection
+\crefname{suppsubsubsection}{supplement subsubsection}{supplement subsubsections}
+\Crefname{suppsubsubsection}{Supplement subsubsection}{Supplement subsubsections}
+\renewcommand{\thesuppsubsubsection}{\thesuppsubsection.\arabic{suppsubsubsection}}
+\newcommand{\suppsubsubsection}[1]{%
+    \refstepcounter{suppsubsubsection}%
+    \subsubsection*{S.\thesuppsubsubsection\quad #1}% display: "S.1.1.1"
+    % subsubsections are not added to the TOC; add a line here if you want them.
+}
+
+
+%%%% Paths --------------------------------------------------------------------
+%
+%  Folders searched by \input{...} (tables) and \includegraphics{...} (figures).
+%  Relative to this file. Adjust to wherever your generated assets live.
+\makeatletter
+\def\input@path{{tables/}{figures/}}
+\makeatother
+\graphicspath{{tables/}{figures/}}
+
+\addbibresource{references.bib}
+
+
+%%%% Metadata -----------------------------------------------------------------
+
+\newcommand{\papertitle}{The paper title: An optional subtitle}  % TODO (sentence case)
+\newcommand{\paperauthor}{First M.~Last}                         % TODO
+\newcommand{\paperdate}{20 June 2026}                           % day month year
+
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% BEGIN MAIN TEXT %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Title page should never carry a page number.
+\thispagestyle{empty}
+
+\vspace*{6pt}
+
+\begin{center}% begin centered title
+
+\textbf{\sffamily\LARGE \papertitle\symfootnote{TODO acknowledgements: thank
+colleagues, seminar audiences, funders, and IRB/registration details here.
+Cite with the usual commands, e.g.\ \textcite{RoeSmith2019} provide data and
+code.}}
+
+\vfill
+
+{\large
+
+\paperauthor\symfootnote{TODO affiliation: Department, University, mailing
+address; \href{mailto:you@example.edu}{you@example.edu}.}
+
+\vspace{\baselineskip}
+
+\paperdate
+
+\vspace{\baselineskip}
+
+}
+
+% Optional status line; delete if unwanted.
+\textit{Working paper.} \href{https://example.com/paper.pdf}{Latest version available here.}
+
+\end{center}% end centered title
+
+\vfill
+\vspace{-1\baselineskip}
+
+\paragraph{Abstract}
+TODO. One paragraph stating the question, method, and headline finding. Keep it
+self-contained: a reader should grasp the contribution without the body. End
+with the takeaway or implication.
+
+\vfill
+\vspace{-1\baselineskip}
+
+{\RaggedRight
+
+\paragraph{\emph{JEL} Codes} C91, D80, D90 % TODO
+
+\paragraph{Keywords} keyword one, keyword two, keyword three, keyword four % TODO
+
+}
+
+\vfill
+
+\clearpage
+
+% Switch the main text to 1.5 line spacing. \setstretch sets the spacing from
+% here on (within the document) without opening a group, unlike the bare
+% \spacing{} command, which the source paper used.
+\setstretch{1.5}
+
+\section{Introduction}\label{sec:intro}
+
+TODO. Open with the motivating question and why it matters. This template
+preserves the source paper's formatting machinery; the prose below only
+demonstrates how to use it.
+
+Cite in parentheses with \parencite{Doe2020}, or in text with
+\textcite{LeeKimPark2021}. Multiple sources collapse neatly:
+\parencite{Doe2020,RoeSmith2019,LeeKimPark2021}. For an author whose name is
+already in the sentence, print only the linked year, as
+\citeauthor{Doe2020} (\citeyearlinked{Doe2020}) shows. Cross-reference sections,
+equations, tables, and figures with \texttt{cleveref}: see \cref{sec:model},
+\cref{eq:objective}, \cref{tbl:results}, and \cref{fig:example}.
+
+\section{Model}\label{sec:model}
+
+TODO. State the framework. The indicator macro \verb|\mybb{1}(...)| typesets a
+blackboard ``1'', e.g.\ $\mybb{1}(x>0)$. A displayed, labelled equation:%
+\begin{align}
+    U_t &= u(x_t) + \beta \sum_{\tau=1} \delta^\tau\, u(x_{t+\tau}).
+    \label{eq:objective}
+\end{align}%
+A second equation referenced together with the first (\cref{eq:objective,eq:foc}):%
+\begin{equation}
+    \frac{\partial U_t}{\partial x_t} = 0.
+    \label{eq:foc}
+\end{equation}
+
+\section{Hypotheses}\label{sec:hypotheses}
+
+State each pre-registered prediction in the \texttt{hypothesis} environment so
+it is numbered and \texttt{cleveref}-referable (see \cref{hyp:main}):
+
+\begin{hypothesis}\label{hyp:main}
+TODO. The primary testable prediction, e.g.\ $\beta_{\text{treat}} <
+\beta_{\text{control}}$.
+\end{hypothesis}
+
+\begin{hypothesis}\label{hyp:secondary}
+TODO. A secondary prediction.
+\end{hypothesis}
+
+\section{Methodology}\label{sec:method}
+
+A custom-labelled enumeration (e.g.\ for a multi-step estimation procedure):
+
+\begin{enumerate}[label=\textbf{\sffamily Step \arabic*:}, align=left, leftmargin=*]
+    \item TODO. Describe the first step.
+    \item TODO. Describe the second step. To attribute a method to two authors
+    with an en-dash, use \textcitedash{RoeSmith2019} standard errors.
+\end{enumerate}
+
+\section{Results}\label{sec:results}
+
+\Cref{tbl:results} and \cref{fig:example} report the main results.
+
+% ---- Table: threeparttable + booktabs + dcolumn (decimal-aligned) ----------
+\begin{table}\centering
+  \begin{threeparttable}
+    \caption{Example results table\label{tbl:results}}
+    \begin{tabular}{l d{1.3} d{1.3}}
+    \toprule
+                          & \multicolumn{1}{c}{Model 1} & \multicolumn{1}{c}{Model 2} \\
+    \cmidrule(lr){2-2}\cmidrule(lr){3-3}
+    Treatment effect      & 0.281 & 0.895 \\
+    \quad standard error  & 0.044 & 0.052 \\
+    \midrule
+    Observations          & \multicolumn{1}{c}{897} & \multicolumn{1}{c}{897} \\
+    \bottomrule
+    \end{tabular}
+    \begin{tablenotes}\footnotesize
+      \emph{Note:} TODO. Numbers in the \texttt{d\{1.3\}} columns align on the
+      decimal point; wrap headers and integer cells in \verb|\multicolumn{1}{c}{...}|.
+    \end{tablenotes}
+  \end{threeparttable}
+\end{table}
+
+% ---- Figure: two TikZ panels via subfig (self-contained, no external files) -
+\begin{figure}\centering
+  \subfloat[First panel\label{fig:example-a}]{%
+    \begin{tikzpicture}
+      \draw[thick] (0,0) rectangle (4,3);
+      \node at (2,1.5) {panel A placeholder};
+    \end{tikzpicture}}
+  \hfill
+  \subfloat[Second panel\label{fig:example-b}]{%
+    \begin{tikzpicture}
+      \draw[thick] (0,0) rectangle (4,3);
+      \node at (2,1.5) {panel B placeholder};
+    \end{tikzpicture}}
+  \caption{Example figure with two panels\label{fig:example}}
+\end{figure}
+
+% ---- Dropping in externally generated assets (R / Stata / Python) ----------
+% Mirror the source paper: \input a booktabs/threeparttable .tex for tables and
+% a pgfplots/TikZ .tex (or \includegraphics a PDF) for figures. The \makebox
+% lets a wide table or figure overrun the text block, centered:
+%
+% \begin{table}[p!]\centering
+%   \makebox[\textwidth][c]{\input{table_regression.tex}}
+% \end{table}
+%
+% \begin{figure}[p!]\centering
+%   \makebox[\textwidth][c]{%
+%     \newcommand{\axiswidth}{5in}\newcommand{\axisheight}{4in}%
+%     \input{figure_estimates.tex}}
+%   \caption{...\label{fig:estimates}}
+% \end{figure}
+%
+% \includegraphics[width=\textwidth]{figure_histogram.pdf}
+
+\section{Conclusion}\label{sec:conclusion}
+
+TODO. Restate the contribution, note limitations, and point to implications and
+future work.
+
+\vspace{1\baselineskip}
+
+\setstretch{1} % single spacing for the reference list
+{\RaggedRight \printbibliography}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% BEGIN SUPPLEMENT %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%  Everything below is the "online supplement": its own title page, table of
+%  contents, S-prefixed sectioning and float numbers, and footer page style.
+%  Delete this whole block if your paper has no supplement.
+
+% Restore TOC writing for the supplement.
+\addtocontents{toc}{\protect\setcounter{tocdepth}{1}}
+
+% New page; smaller font, 1in margins, single spacing.
+\clearpage
+\KOMAoptions{fontsize=11pt} %%KOMA%%
+% 1in margins for the supplement (overrides the main text's KOMA type area),
+% giving a wider text block so wide tables/screenshots scale down less.
+\newgeometry{margin=1in}
+% ALTERNATIVE: instead of fixed 1in margins, let KOMA recompute a DIV-based
+% type area for the supplement. Comment out the \newgeometry line above and
+% uncomment the two lines below (this is the original template behavior):
+%\KOMAoptions{DIV=14} %%KOMA%%
+%\recalctypearea %%KOMA%%
+\normalfont %%KOMA%%
+\linespread{1}\selectfont %%KOMA%%
+
+% Prefix all tables and figures with "S."
+\renewcommand{\thetable}{S.\arabic{table}}
+\renewcommand{\thefigure}{S.\arabic{figure}}
+
+% Keep hyperref anchors unique between main text and supplement.
+\renewcommand{\theHsection}{S.\arabic{section}}
+\renewcommand{\theHsubsection}{S.\arabic{section}.\arabic{subsection}}
+\renewcommand{\theHsubsubsection}{S.\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
+\renewcommand{\theHfigure}{S.\arabic{figure}}
+\renewcommand{\theHtable}{S.\arabic{table}}
+
+% Supplement page style: centered "Supplement page N" footer. %%KOMA%%
+\newpairofpagestyles[scrheadings]{suppstyle}{%
+  \clearpairofpagestyles
+  \cfoot{Supplement page \pagemark}%
+}
+\pagestyle{suppstyle}
+
+% Restart page numbering for the supplement.
+\setcounter{page}{1}
+
+% Supplement title page.
+\begin{center}
+\vspace*{6pt}
+{\sffamily\bfseries\LARGE \papertitle}\\
+\vspace{9pt}
+{\sffamily\bfseries\large Supplement for online publication}\\
+\vspace{18pt}
+{\large \paperauthor}\\
+\vspace{9pt}
+{\large \paperdate}\\
+\vspace{24pt}
+\end{center}
+
+\tableofcontents
+
+\suppsection{First supplement section}\label{sec:supp:first}
+
+TODO. Supplement sections are numbered S.1, S.2, \ldots\ and appear in the
+contents above. Reference them like \cref{sec:supp:first} or
+\cref{sec:supp:second}.
+
+\suppsubsection{A subsection}\label{sec:supp:first:sub}
+
+TODO. Numbered S.1.1.
+
+\suppsubsubsection{A sub-subsection}
+
+TODO. Numbered S.1.1.1 (not added to the contents by default).
+
+\suppsection{Additional results}\label{sec:supp:second}
+
+Supplement floats are numbered with an ``S.'' prefix automatically: see
+\cref{tbl:supp-example} and \cref{fig:supp-example}.
+
+\begin{table}[h]\centering
+  \begin{threeparttable}
+    \caption{A supplementary table\label{tbl:supp-example}}
+    \begin{tabular}{lcc}
+    \toprule
+    Row & Column A & Column B \\
+    \midrule
+    First  & 1 & 2 \\
+    Second & 3 & 4 \\
+    \bottomrule
+    \end{tabular}
+    \begin{tablenotes}\footnotesize
+      \emph{Note:} TODO.
+    \end{tablenotes}
+  \end{threeparttable}
+\end{table}
+
+\begin{figure}[h]\centering
+  \begin{tikzpicture}
+    \draw[thick] (0,0) rectangle (6,3);
+    \node at (3,1.5) {supplement figure placeholder};
+  \end{tikzpicture}
+  \caption{A supplementary figure\label{fig:supp-example}}
+\end{figure}
+
+\end{document}
