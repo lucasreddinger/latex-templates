@@ -164,11 +164,12 @@
 %%%% Common configuration -----------------------------------------------------
 
 % \mybb{1} -> blackboard-bold digit, for indicator functions like \mybb{1}(d=2).
-% Minion Pro's math lacks a blackboard "1", so this pulls the glyph from the
-% doublestroke font (requires the dsserif package, which is installed).
+% Math fonts (newtxmath, mathdesign, ...) ship blackboard *letters* but no
+% blackboard *digit*, so this selects the DSSerif font directly (free; the
+% dsserif files are in TeX Live). Since \usefont bypasses the main font, it
+% renders identically under any of the font stacks above -- nothing to swap
+% when you switch to the free stack.
 \newcommand{\mybb}[1]{{\text{{\usefont{U}{DSSerif}{m}{n}#1}}}}
-% Free-font fallback if you switch stacks: \usepackage{dsfont} above, then use
-%\newcommand{\mybb}[1]{\mathds{#1}}
 
 % A dcolumn type "d" that aligns numbers on the decimal point, e.g. d{2.3}
 \newcolumntype{d}[1]{D{.}{.}{#1}}
