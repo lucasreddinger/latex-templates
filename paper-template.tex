@@ -15,9 +15,9 @@
 %      pdflatex paper-template
 %      pdflatex paper-template
 %
-%  By default this file uses Minion Pro (a commercial font). If it is not
-%  installed, switch to the free Charter stack in the "Font face packages"
-%  block below and it builds on any TeX Live / MiKTeX.
+%  By default this file uses the free Cochineal stack and builds on any current
+%  TeX Live / MiKTeX. A commented Minion Pro (commercial) stack is included at
+%  the end of the "Font face packages" block for personal / camera-ready builds.
 %==============================================================================
 
 \documentclass[
@@ -27,32 +27,44 @@
 
 %%%% Font face packages -------------------------------------------------------
 %
-%  Three interchangeable stacks. EXACTLY ONE must be active (uncommented).
-%  Stack 1 (Minion Pro) is the default.
+%  Four interchangeable stacks. EXACTLY ONE must be active (uncommented).
+%  Stack 1 (Cochineal, free) is the default and builds on any current TeX Live.
+%  Stack 4 (Minion Pro, commercial) is my personal camera-ready design, left
+%  commented out.
 %
-%  The %%arxiv-font%% / %%not-arxiv-font%% tags let a build script swap stacks
-%  automatically (e.g. the free stack 2 for an arXiv upload, Minion Pro for the
-%  camera-ready). Keep them if you use such a script; otherwise ignore.
+%  The %%arxiv-font%% / %%not-arxiv-font%% tags let a build script swap the
+%  active stack automatically: the %%arxiv-font%% lines (Cochineal, free) stay
+%  active for an arXiv upload, the %%not-arxiv-font%% lines (Minion Pro) for the
+%  camera-ready. Keep them if you use such a script; otherwise ignore.
 
-% 1. Minion Pro + Source Sans Pro + Inconsolata   <-- DEFAULT
-%    Minion Pro is a commercial serif and must be installed separately. Switch
-%    to stack 2 for a fully free build.
-\usepackage{newtxmath}                                  % math  %%not-arxiv-font%%
-\usepackage[fullfamily,swash,lf,mathtabular]{MinionPro} % serif %%not-arxiv-font%%
-\usepackage[semibold,scaled=0.95]{sourcesanspro}        % sans  %%not-arxiv-font%%
-\usepackage[scaled=1.04,varqu,varl]{inconsolata}        % mono  %%not-arxiv-font%%
+% 1. Cochineal + Source Sans Pro + Inconsolata   <-- DEFAULT (free)
+%    Cochineal is a refined Crimson: a warm, old-style book serif, close in
+%    character to Minion. newtxmath's matching option gives coherent math.
+\usepackage[p,osf]{cochineal}                           % serif %%arxiv-font%%
+\usepackage[cochineal,vvarbb]{newtxmath}                % math  %%arxiv-font%%
+\usepackage[semibold,scaled=0.95]{sourcesanspro}        % sans  %%arxiv-font%%
+\usepackage[scaled=1.04,varqu,varl]{inconsolata}        % mono  %%arxiv-font%%
 
-% 2. Charter + Source Sans Pro + Inconsolata   (free fallback, e.g. for arXiv)
-%\usepackage[charter]{mathdesign}                        % math  %%arxiv-font%%
-%\usepackage[sups,osf]{XCharter}                         % serif %%arxiv-font%%
-%\usepackage[semibold]{sourcesanspro}                    % sans  %%arxiv-font%%
-%\usepackage[scaled=1.04,varqu,varl]{inconsolata}        % mono  %%arxiv-font%%
-
-% 3. TeX Gyre Pagella (Palatino) + TeX Gyre Heros + Inconsolata + newtx math
-%\usepackage{newtxmath}                                  % math
-%\usepackage{tgpagella}                                  % serif
-%\usepackage{tgheros}                                    % sans
+% 2. Libertinus (serif + Biolinum sans) + Inconsolata   (free)
+%    Serif and sans are siblings, so this is the most internally coherent stack.
+%\usepackage[mono=false]{libertine}                      % serif + sans
+%\usepackage[libertine,vvarbb]{newtxmath}                % math
 %\usepackage[scaled=1.04,varqu,varl]{inconsolata}        % mono
+
+% 3. STIX Two (Times-like) + Source Sans Pro + Inconsolata   (free)
+%    Times-flavoured text with the widest math-symbol coverage of these stacks.
+%\usepackage{stix2}                                      % serif + math
+%\usepackage[semibold,scaled=0.95]{sourcesanspro}        % sans
+%\usepackage[scaled=1.04,varqu,varl]{inconsolata}        % mono
+
+% 4. Minion Pro + Source Sans Pro + Inconsolata   (commercial; my personal stack)
+%    My own camera-ready design; Minion Pro must be installed separately. A
+%    build script swaps it in (via the %%not-arxiv-font%% tags) for the
+%    non-arXiv build.
+%\usepackage{newtxmath}                                  % math  %%not-arxiv-font%%
+%\usepackage[fullfamily,swash,lf,mathtabular]{MinionPro} % serif %%not-arxiv-font%%
+%\usepackage[semibold,scaled=0.95]{sourcesanspro}        % sans  %%not-arxiv-font%%
+%\usepackage[scaled=1.04,varqu,varl]{inconsolata}        % mono  %%not-arxiv-font%%
 
 
 %%%% Boilerplate packages -----------------------------------------------------
@@ -491,15 +503,15 @@ next step.
 
 % Supplement title page.
 \begin{center}
-\vspace*{6pt}
+\vspace*{\baselineskip}
 {\sffamily\bfseries\LARGE \papertitle}\\
-\vspace{9pt}
-{\sffamily\bfseries\large Supplement for online publication}\\
-\vspace{18pt}
+\vspace{\baselineskip}
+{\sffamily\Large Supplement for online publication}\\
+\vspace{2\baselineskip}
 {\large \paperauthor}\\
-\vspace{9pt}
+\vspace{\baselineskip}
 {\large \paperdate}\\
-\vspace{24pt}
+\vspace{2\baselineskip}
 \end{center}
 
 \tableofcontents
