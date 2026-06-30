@@ -17,7 +17,7 @@
 %
 %  By default this file uses the free Cochineal stack and builds on any current
 %  TeX Live / MiKTeX. A commented Minion Pro (commercial) stack is included at
-%  the end of the "Font face packages" block for personal / camera-ready builds.
+%  the end of the "Font face packages" block for my own non-arXiv builds.
 %==============================================================================
 
 \documentclass[
@@ -29,13 +29,12 @@
 %
 %  Four interchangeable stacks. EXACTLY ONE must be active (uncommented).
 %  Stack 1 (Cochineal, free) is the default and builds on any current TeX Live.
-%  Stack 4 (Minion Pro, commercial) is my personal camera-ready design, left
-%  commented out.
+%  Stack 4 (Minion Pro, commercial) is my personal stack, left commented out.
 %
 %  The %%arxiv-font%% / %%not-arxiv-font%% tags let a build script swap the
 %  active stack automatically: the %%arxiv-font%% lines (Cochineal, free) stay
-%  active for an arXiv upload, the %%not-arxiv-font%% lines (Minion Pro) for the
-%  camera-ready. Keep them if you use such a script; otherwise ignore.
+%  active for an arXiv upload, the %%not-arxiv-font%% lines (Minion Pro) for
+%  everything else. Keep them if you use such a script; otherwise ignore.
 
 % 1. Cochineal + Source Sans Pro + Inconsolata   <-- DEFAULT (free)
 %    Cochineal is a refined Crimson: a warm, old-style book serif, close in
@@ -45,11 +44,12 @@
 \usepackage[semibold,scaled=0.95]{sourcesanspro}        % sans  %%arxiv-font%%
 \usepackage[scaled=1.04,varqu,varl]{inconsolata}        % mono  %%arxiv-font%%
 
-% 2. Libertinus (serif + Biolinum sans) + Inconsolata   (free)
-%    Serif and sans are siblings, so this is the most internally coherent stack.
-%\usepackage[mono=false]{libertine}                      % serif + sans
+% 2. Libertinus serif + sans + mono   (free)
+%    The whole family from one source -- the most internally coherent stack.
+%    Math is newtxmath with letterforms matched to Libertine; native Libertinus
+%    Math would need LuaLaTeX/unicode-math, so under pdflatex this is the route.
+%\usepackage{libertinus}                                 % serif + sans + mono
 %\usepackage[libertine,vvarbb]{newtxmath}                % math
-%\usepackage[scaled=1.04,varqu,varl]{inconsolata}        % mono
 
 % 3. STIX Two (Times-like) + Source Sans Pro + Inconsolata   (free)
 %    Times-flavoured text with the widest math-symbol coverage of these stacks.
@@ -58,9 +58,8 @@
 %\usepackage[scaled=1.04,varqu,varl]{inconsolata}        % mono
 
 % 4. Minion Pro + Source Sans Pro + Inconsolata   (commercial; my personal stack)
-%    My own camera-ready design; Minion Pro must be installed separately. A
-%    build script swaps it in (via the %%not-arxiv-font%% tags) for the
-%    non-arXiv build.
+%    My personal stack; Minion Pro must be installed separately. A build script
+%    swaps it in (via the %%not-arxiv-font%% tags) for non-arXiv builds.
 %\usepackage{newtxmath}                                  % math  %%not-arxiv-font%%
 %\usepackage[fullfamily,swash,lf,mathtabular]{MinionPro} % serif %%not-arxiv-font%%
 %\usepackage[semibold,scaled=0.95]{sourcesanspro}        % sans  %%not-arxiv-font%%
