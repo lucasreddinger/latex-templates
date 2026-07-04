@@ -34,25 +34,33 @@ pdflatex paper-template
 
 `lualatex`/`xelatex` work too (swap the engine in latexmk with `-lualatex`).
 
-Tested with TeX Live 2025. The default font stack is **Minion Pro** (commercial;
-must be installed separately). If it is not installed, switch to the free Charter
-stack (see **Fonts**) and it builds on any current TeX Live / MiKTeX.
+Tested with TeX Live 2025. The default font stack is **Cochineal** (free), so it
+builds on any current TeX Live / MiKTeX out of the box. A commented Minion Pro
+(commercial) stack is included for camera-ready builds where that font is
+installed (see **Fonts**).
 
 ## Fonts
 
-The "Font face packages" block near the top offers three interchangeable stacks;
+The "Font face packages" block near the top offers four interchangeable stacks;
 exactly one is active:
 
-1. **Minion Pro** + Source Sans Pro + Inconsolata — **default**. Minion Pro is
-   **commercial** and must be installed.
-2. **Charter / XCharter** + Source Sans Pro + Inconsolata — 100%-free fallback
-   (e.g. for arXiv or a machine without Minion Pro). *(commented out)*
-3. **TeX Gyre Pagella** (Palatino) + TeX Gyre Heros + Inconsolata. *(commented out)*
+1. **Cochineal** + Source Sans Pro + Inconsolata — **default** (free). A refined
+   Crimson: a warm, old-style book serif close in character to Minion, with
+   matching `newtxmath` math. Builds on any current TeX Live.
+2. **Libertinus** serif + sans + mono — free, the whole family from one source
+   (the most internally coherent stack). Math is `newtxmath` with letterforms
+   matched to Libertine. *(commented out)*
+3. **STIX Two** (Times-like) + Source Sans Pro + Inconsolata — free,
+   Times-flavoured text with the widest math-symbol coverage of these stacks.
+   *(commented out)*
+4. **Minion Pro** + Source Sans Pro + Inconsolata — **commercial**; must be
+   installed separately. The personal camera-ready stack. *(commented out)*
 
 To switch, comment the active block and uncomment another. The
-`%%arxiv-font%%` / `%%not-arxiv-font%%` tags are there if you script the swap
-(e.g. the free stack for arXiv, Minion Pro for camera-ready); otherwise ignore
-them.
+`%%arxiv-font%%` / `%%not-arxiv-font%%` tags are there if you script the swap:
+the `%%arxiv-font%%` lines (Cochineal, free) stay active for an arXiv upload,
+the `%%not-arxiv-font%%` lines (Minion Pro) for everything else. Otherwise
+ignore them.
 
 ## What's included (feature reference)
 
@@ -71,21 +79,23 @@ equations, tables, figures, hypotheses, and supplement sections — all
 hyperlinked, spelled out (no "fig.").
 
 **Math** — `\mybb{1}` gives a blackboard-bold indicator digit, e.g.
-`\mybb{1}(d=2)`, using Minion Pro's companion `dsserif` glyph. (A free-font
-fallback using `dsfont` is kept in a comment.)
+`\mybb{1}(d=2)`, selecting the free `DSSerif` font directly via `\usefont`. It
+therefore renders identically under any of the four font stacks — nothing to
+swap when you change stacks.
 
 **Environments & structures:**
 - `hypothesis` — a numbered, `cleveref`-referable theorem environment.
 - A custom `enumerate` label style for **Step 1: / Step 2:** procedures.
 - `table` via `threeparttable` + `booktabs` + the `d{i.j}` decimal-aligning
   column type (`dcolumn`), with `tablenotes`.
-- `figure` with multi-panel `\subfloat` (`subfig`) and TikZ/pgfplots.
+- `figure` with self-contained TikZ (plus commented examples for dropping in
+  externally generated tables/figures).
 
 **Online supplement** (delete the whole block if unused) — its own title page,
-table of contents, smaller font / wider margins, "Supplement page N" footer,
-reset page numbering, `S.`-prefixed table/figure numbers, and the
-`\suppsection` / `\suppsubsection` / `\suppsubsubsection` commands numbering as
-S.1, S.1.1, S.1.1.1.
+table of contents, smaller font (11pt), 1in margins (with a commented KOMA
+DIV-based alternative), "Supplement page N" footer, reset page numbering,
+`S.`-prefixed table/figure numbers, and the `\suppsection` / `\suppsubsection` /
+`\suppsubsubsection` commands numbering as S.1, S.1.1, S.1.1.1.
 
 ## Customization checklist
 
@@ -100,9 +110,13 @@ S.1, S.1.1, S.1.1.1.
 
 ## Notes
 
-- Default fonts use the commercial **Minion Pro** (`MinionPro`, `newtxmath`,
-  `sourcesanspro`, `inconsolata`) plus `dsserif` for the indicator glyph. The
-  free Charter fallback uses `XCharter` + `mathdesign` instead.
+- The default **Cochineal** stack (`cochineal`, `newtxmath`, `sourcesanspro`,
+  `inconsolata`) is fully free and in a full TeX Live. The commented Minion Pro
+  stack (`MinionPro`, `newtxmath`) is commercial and must be installed
+  separately.
+- The `\mybb` indicator glyph uses `DSSerif` (free; the files ship with TeX
+  Live), loaded directly via `\usefont`, so it is independent of the active
+  font stack.
 - Other non-default packages, all free and in a full TeX Live: `biblatex-chicago`,
   `tabfigures`, `threeparttable`, `dcolumn`, `subfig`, `pgfplots`, `contour`,
   `adjustbox`. If `tabfigures` is missing, comment out its `\usepackage` line —
