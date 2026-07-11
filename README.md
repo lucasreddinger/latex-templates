@@ -20,6 +20,7 @@ and supplement machinery) and the customization checklist.
 | `programs/` | Analysis code (Stata / R / Python / …) that reads `data/` and writes `figures/` + `tables/`. |
 | `slides/` | Talk slides. |
 | `package_paper.sh` | Builds the paper and bundles a self-contained arXiv upload. |
+| `package_programs.sh` | Bundles `programs/` into a replication archive. |
 
 `paper/ms.tex` reaches the shared assets through relative paths
 (`../figures/`, `../tables/`, `../references.bib`), so compile it from inside
@@ -60,7 +61,20 @@ Pro** stack for a camera-ready build (see
 active `%%not-arxiv-font%%` line and swaps *the packaged copy* back to the free
 `%%arxiv-font%%` stack automatically. Your source file is never touched.
 
+## Packaging the code for replication
+
+```sh
+./package_programs.sh
+```
+
+This copies `programs/` into `programs_package/` (dropping the regenerable
+build artifacts listed in `EXCLUDES` — `logs/`, `temp/`, `output/`) and zips it
+as `project_programs.zip`. Set `PROJECT` at the top to rename the archive. To
+repoint a local data path at a published dataset in the packaged copy (e.g. a
+Stata `main.do` at an OSF URL), fill in the optional `DATA_REWRITE_*` variables.
+Like the paper packager, it refuses to overwrite existing outputs.
+
 ## Requirements
 
 A TeX distribution (TeX Live 2025 / MiKTeX) with `latexmk` + `biber`, plus
-`zip` and a POSIX shell (Git Bash on Windows) to run `package_paper.sh`.
+`zip` and a POSIX shell (Git Bash on Windows) to run the packaging scripts.

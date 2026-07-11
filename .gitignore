@@ -21,8 +21,9 @@
 # built paper, not every PDF.
 /paper/*.pdf
 
-# --- arXiv packaging outputs (package_paper.sh) ------------------------------
+# --- packaging staging dirs + archives (package_paper.sh / package_programs.sh)
 /paper_package/
+/programs_package/
 /*.zip
 # dated public PDF copies dropped at the project root, e.g. paper_2026-07-04.pdf
 /*_[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].pdf
