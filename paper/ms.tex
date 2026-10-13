@@ -22,7 +22,7 @@
 %==============================================================================
 
 \documentclass[
-    fontsize=12pt,DIV=10,fleqn,
+    fontsize=12pt,fleqn,
     letterpaper,oneside,paper=portrait,
 ]{scrartcl}
 
@@ -94,9 +94,8 @@
 \usepackage[para,flushleft]{threeparttable}
 \usepackage{dcolumn}
 \usepackage{enumitem}
-% Loaded [pass] so it does not disturb the main text's KOMA DIV type-area;
-% the supplement then switches to 1in margins via \newgeometry.
-\usepackage[pass]{geometry}
+% 1in margins on all sides (in place of KOMA's DIV-based type area).
+\usepackage[margin=1in]{geometry}
 \usepackage{graphicx}
 
 
@@ -446,17 +445,9 @@ next step.
 % Restore TOC writing for the supplement.
 \addtocontents{toc}{\protect\setcounter{tocdepth}{1}}
 
-% New page; smaller font, 1in margins, single spacing.
+% New page; smaller font, single spacing (same 1in margins as the main text).
 \clearpage
 \KOMAoptions{fontsize=11pt} %%KOMA%%
-% 1in margins for the supplement (overrides the main text's KOMA type area),
-% giving a wider text block so wide tables/screenshots scale down less.
-\newgeometry{margin=1in}
-% ALTERNATIVE: instead of fixed 1in margins, let KOMA recompute a DIV-based
-% type area for the supplement. Comment out the \newgeometry line above and
-% uncomment the two lines below (this is the original template behavior):
-%\KOMAoptions{DIV=14} %%KOMA%%
-%\recalctypearea %%KOMA%%
 \normalfont %%KOMA%%
 \linespread{1}\selectfont %%KOMA%%
 

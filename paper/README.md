@@ -11,6 +11,7 @@ own content.
 | File | Purpose |
 |------|---------|
 | `ms.tex` | The template: a short example paper you replace with your own. |
+| `note.tex` | `ms.tex` stripped down for short notes: same preamble features, but a compact title/author/date block instead of a title page, no supplement, single spacing. Compile with `latexmk -pdf note`. |
 | `prompt.md` | A helper prompt for dropping a draft document into the template. |
 | `../references.bib` | Shared bibliography (biblatex format) at the project root. Replace with yours. |
 
@@ -94,10 +95,10 @@ swap when you change stacks.
   externally generated tables/figures).
 
 **Online supplement** (delete the whole block if unused) — its own title page,
-table of contents, smaller font (11pt), 1in margins (with a commented KOMA
-DIV-based alternative), "Supplement page N" footer, reset page numbering,
-`S.`-prefixed table/figure numbers, and the `\suppsection` / `\suppsubsection` /
-`\suppsubsubsection` commands numbering as S.1, S.1.1, S.1.1.1.
+table of contents, smaller font (11pt), "Supplement page N" footer, reset page
+numbering, `S.`-prefixed table/figure numbers, and the `\suppsection` /
+`\suppsubsection` / `\suppsubsubsection` commands numbering as S.1, S.1.1,
+S.1.1.1.
 
 ## Customization checklist
 
