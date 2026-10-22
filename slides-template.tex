@@ -1,26 +1,18 @@
 %==============================================================================
-%  ACADEMIC SLIDES TEMPLATE  (beamer talk + backup slides)
+%  ACADEMIC SLIDES TEMPLATE  (beamer talk + appendix slides)
 %------------------------------------------------------------------------------
-%  A 16:9 talk to accompany paper-template.tex. The preamble mirrors the
-%  paper's: the same citation setup, custom commands, paths, and metadata
-%  names, so text, equations, hypotheses, and tables move between the two
-%  files unchanged. The body is a short example talk that exercises each
-%  feature, followed by backup slides numbered apart from the main talk.
-%  Replace the metadata and the example content with your own.
+%  A minimal 16:9 talk to accompany paper-template.tex. Sans-serif throughout
+%  (text and math in Source Sans Pro, the paper's sans), with only the
+%  packages the slides use. The body is a short example talk followed by
+%  appendix slides numbered apart from the main talk. Replace the metadata and
+%  the example content with your own.
 %==============================================================================
-%  COMPILE (bibliography uses biblatex + biber):
+%  COMPILE (pdflatex only: the sans-serif math needs Type 1 fonts):
 %      latexmk -pdf filename
-%  or manually:
-%      pdflatex filename      (pdflatex only: the sans math needs Type 1 fonts)
-%      biber    filename
-%      pdflatex filename
-%      pdflatex filename
+%  or run pdflatex twice (the second pass fills in the slide totals).
 %
 %  HANDOUT: add "handout" to the class options for one page per frame with
 %  every overlay shown (for printing or posting).
-%
-%  All fonts are free: text and math are set in Source Sans Pro, the paper's
-%  sans, so the slides build on any current TeX Live / MiKTeX.
 %==============================================================================
 
 % t: top-align frame content so it does not shift as overlays appear.
@@ -31,176 +23,141 @@
 
 %%%% Theme --------------------------------------------------------------------
 %
-%  Moloch is the maintained fork of Metropolis. Its colors are restyled to a
-%  light, paper-like look in "Boilerplate configuration" below.
+%  Moloch is the maintained fork of Metropolis. Its title layouts are replaced
+%  in "Configuration" so every title sits over the same rule.
 
-\usetheme[progressbar=frametitle,sectionpage=progressbar]{moloch}
+\usetheme{moloch}
 
 %%%% Font face packages -------------------------------------------------------
 %
-%  One stack: text AND math in Source Sans Pro, so every slide (equations and
-%  table figures included) is a single typeface. The first four lines are the
-%  paper's own, except that "default" makes Source Sans the body font:
-%  Cochineal serves any \textrm pasted from the paper, and newtxmath supplies
-%  the math symbols (sums, partials, ...). mathastext, loaded last, takes the
-%  math letters, Greek, and digits from the body font; professionalfonts stops
-%  beamer from swapping in its own math fonts first.
+%  Source Sans Pro for text and math alike. mathastext takes the math letters,
+%  digits, and Greek (via the LGR encoding) from the text font;
+%  professionalfonts stops beamer from swapping in its own math fonts first.
 
-\usepackage[p,osf]{cochineal}                           % serif
-\usepackage[cochineal,vvarbb]{newtxmath}                % math symbols
-\usepackage[default,semibold,scaled=0.95]{sourcesanspro} % sans (body)
-\usepackage[scaled=1.04,varqu,varl]{inconsolata}        % mono
+\usepackage[semibold]{sourcesanspro}
+\usepackage[LGR,T1]{fontenc}
 \usefonttheme{professionalfonts}
-\usepackage[LGR,T1]{fontenc}                            % LGR: Greek in math
-\usepackage[italic,LGRgreek]{mathastext}                % math letters + digits
+\usepackage[italic,LGRgreek]{mathastext}
 
-
-%%%% Boilerplate packages -----------------------------------------------------
+%%%% Packages -----------------------------------------------------------------
 %
-%  The paper's list, minus what beamer provides or conflicts with: beamer
-%  loads hyperref, graphicx, and amsthm itself; enumitem breaks beamer's
-%  lists; KOMA, setspace, ragged2e, footmisc, and geometry have no job here.
+%  Beamer already loads graphicx, xcolor, hyperref, amsmath, and TikZ (via
+%  the theme). Add only what your slides use.
 
-\usepackage{mathtools}
 \usepackage{booktabs}
-% noibid: CMOS author-date style opposes an ibidem mechanism.
-\usepackage[backend=biber,authordate,noibid]{biblatex-chicago}
-% Lets \cref from the paper work unchanged; noabbrev avoids "fig." Beamer
-% loads hyperref with implicit=false, so cleveref warns that it cannot add
-% links: \cref text comes out right but unlinked, as beamer's own \ref is.
-\usepackage[noabbrev]{cleveref}
-\usepackage{microtype} % improves optical fit
 
+%%%% Configuration ------------------------------------------------------------
 
-%%%% Common packages ----------------------------------------------------------
+% Palette. EXACTLY ONE block must be active (uncommented). Each sets the five
+% colors the deck uses: paper (background), ink (text, titles), accent (title
+% rules, bullets, block shading), highlight (\alert), and closing (background
+% of the closing "Thank you" slide). The commented blocks are alternatives set
+% aside for later, in order of preference; slides-palettes.tex shows them all.
+% Reuse the hex codes in R / Stata / Python figures so they match the slides.
 
-\usepackage[para,flushleft]{threeparttable}
-\usepackage{dcolumn}
+% 0. Dark rules, vermilion alerts   <-- DEFAULT
+\definecolor{paper}{HTML}{FAFAFA}
+\definecolor{ink}{HTML}{23373B}
+\colorlet{accent}{ink}
+\definecolor{highlight}{HTML}{D55E00} % Okabe--Ito vermilion
+\definecolor{closing}{HTML}{333333}   % charcoal
 
+% 1. Paul Tol high-contrast
+%\definecolor{paper}{HTML}{FAFAFA}
+%\definecolor{ink}{HTML}{1F1F1F}
+%\definecolor{accent}{HTML}{004488}
+%\definecolor{highlight}{HTML}{BB5566}
+%\colorlet{closing}{ink}
 
-%%%% Custom packages ----------------------------------------------------------
+% 2. Monochrome + red
+%\definecolor{paper}{HTML}{FFFFFF}
+%\definecolor{ink}{HTML}{1A1A1A}
+%\definecolor{accent}{HTML}{5C5C5C}
+%\definecolor{highlight}{HTML}{C62828}
+%\colorlet{closing}{ink}
 
-\usepackage{tikz}
-\usepackage{qrcode}
+% 3. Nord
+%\definecolor{paper}{HTML}{FAFAFA}
+%\definecolor{ink}{HTML}{2E3440}
+%\definecolor{accent}{HTML}{5E81AC}
+%\definecolor{highlight}{HTML}{BF616A}
+%\colorlet{closing}{ink}
 
+% 4. IBM Carbon
+%\definecolor{paper}{HTML}{FFFFFF}
+%\definecolor{ink}{HTML}{161616}
+%\definecolor{accent}{HTML}{0F62FE}
+%\definecolor{highlight}{HTML}{DA1E28}
+%\colorlet{closing}{ink}
 
+% 5. Solarized light
+%\definecolor{paper}{HTML}{FDF6E3}
+%\definecolor{ink}{HTML}{073642}
+%\definecolor{accent}{HTML}{268BD2}
+%\definecolor{highlight}{HTML}{DC322F}
+%\colorlet{closing}{ink}
 
-%%%% Boilerplate configuration ------------------------------------------------
+% 6. Okabe--Ito: blue rules, vermilion alerts
+%\definecolor{paper}{HTML}{FAFAFA}
+%\definecolor{ink}{HTML}{23373B}
+%\definecolor{accent}{HTML}{0072B2}
+%\definecolor{highlight}{HTML}{D55E00}
+%\definecolor{closing}{HTML}{333333}
 
-% Palette: Okabe--Ito colors, safe for color-blind viewers. Use the same names
-% in TikZ/pgfplots figures (R, Stata, and Python ship this palette too).
-\definecolor{ink}{HTML}{23373B}       % text, frame titles
-\definecolor{accent}{HTML}{0072B2}    % Okabe--Ito blue: bullets, progress rule
-\definecolor{highlight}{HTML}{D55E00} % Okabe--Ito vermilion: \alert
-
-% Light frame titles on the page background, with the accent progress rule
-% beneath; the standout frame keeps the theme's dark ink background.
-\setbeamercolor{normal text}{fg=ink}
+% Light frame titles on the page background. The closing (standout) slide
+% sets paper-colored text on the closing color.
+\setbeamercolor{normal text}{fg=ink,bg=paper}
+\setbeamercolor{palette primary}{fg=paper,bg=closing}
 \setbeamercolor{structure}{fg=accent}
 \setbeamercolor{frametitle}{fg=ink,bg=}
-\setbeamercolor{progress bar}{fg=accent,bg=accent!15}
 \setbeamercolor{block title}{fg=ink,bg=accent!15}
 \setbeamercolor{block body}{bg=accent!5}
-% Vermilion is lighter than the other colors, so alerts are also bold.
+% Alerts are also bold, because vermilion is a little light for
+% normal-weight text on a white slide.
 \setbeamercolor{alerted text}{fg=highlight}
 \setbeamerfont{alerted text}{series=\bfseries}
 
-% Footer shows "n / N", where N counts the main talk only; frames after
-% \appendix (references, backup) are numbered on their own.
-\setbeamertemplate{page number in head/foot}[appendixframenumber]
-
-% \appendix names its PDF bookmark with \translate{Appendix}; keep just the
-% word (silences hyperref's "Token not allowed in a PDF string" warning).
-\pdfstringdefDisableCommands{\def\translate#1{#1}}
-
-% A "Hypothesis" theorem environment, numbered as in the paper. Beamer
-% provides theorems itself (amsthm, not ntheorem) and sets them as blocks.
-\setbeamertemplate{theorems}[numbered]
-\newtheorem{hypothesis}{Hypothesis}
-\crefname{hypothesis}{Hypothesis}{Hypotheses}
-\Crefname{hypothesis}{Hypothesis}{Hypotheses}
-
-% Reference list: no beamer icons, small type, and a page numeral in the
-% frame title only when the list runs over more than one page.
-\setbeamertemplate{bibliography item}{}
-\renewcommand*{\bibfont}{\footnotesize}
-\setbeamertemplate{frametitle continuation}[singleframecheck]
-
-% biblatex-chicago sets URLs in the serif; on slides, use the body font.
-\urlstyle{same}
-
-% \citeyearlinked{key}: prints (and links) only the year of a reference
-\DeclareCiteCommand{\citeyearlinked}
-  {\boolfalse{citetracker}%
-   \boolfalse{pagetracker}%
-   \usebibmacro{prenote}}
-  {\ifciteindex
-     {\indexfield{indextitle}}
-     {}%
-   \printtext[bibhyperref]{\printfield[citeyear]{labelyear}}}
-  {\multicitedelim}
-  {\usebibmacro{postnote}}
-
-% \textcitedash{key}: like \textcite but en-dashes co-authors' names,
-% e.g. "Murphy-Topel standard errors" -> "Murphy--Topel standard errors".
-\newcommand{\textcitedash}[1]{%
-  {%
-  \DeclareDelimFormat{finalnamedelim}{\textendash}%
-  \textcite{#1}%
-  }%
+% The deck's one rule: thin, accent-colored, the width of the text block, set
+% a fixed 6pt below the baseline of the title it underlines (whatever its
+% letters) -- on the title page, every frame, and every section divider.
+% Frame titles start at the text margin (beamer's default 1cm), so titles,
+% rules, and body text all share one left edge.
+\newcommand{\titlerule}{%
+  \par\kern-\prevdepth\kern6pt\nointerlineskip
+  \noindent{\color{accent}\rule{\textwidth}{0.4pt}}\par}
+\setbeamertemplate{title}{\raggedright\inserttitle\par}
+\setbeamertemplate{title separator}{\titlerule\vspace*{0.8em}}
+\setbeamertemplate{frametitle}{%
+  \begin{beamercolorbox}[wd=\paperwidth,leftskip=1cm,rightskip=1cm plus 1fil]{frametitle}%
+    \rule{0pt}{4ex}\insertframetitle\par
+    {\usebeamerfont{framesubtitle}\insertframesubtitle\par}%
+    \titlerule
+  \end{beamercolorbox}%
 }
+\setbeamertemplate{section page}{%
+  {\usebeamerfont{section title}\insertsectionhead\par}%
+  \titlerule
+}
+
+% Footer shows "n / N", where N counts the main talk only; the appendix block
+% switches to "Appendix k / K".
+\setbeamertemplate{page number in head/foot}[appendixframenumber]
 
 % Speaker notes (\note{...}) are left out of the PDF by default. Uncomment to
 % put them on a second screen for a presenter tool such as pdfpc.
 %\setbeameroption{show notes on second screen=right}
 
-
-%%%% Common configuration -----------------------------------------------------
-
-% \mybb{1} -> blackboard-bold digit, for indicator functions like \mybb{1}(d=2).
-% Math fonts (newtxmath, mathdesign, ...) ship blackboard *letters* but no
-% blackboard *digit*, so this selects the DSSerif font directly (free; the
-% dsserif files are in TeX Live). Since \usefont bypasses the main font, it
-% renders identically under any of the font stacks above -- nothing to swap
-% when you switch to the free stack.
-\newcommand{\mybb}[1]{{\text{{\usefont{U}{DSSerif}{m}{n}#1}}}}
-
-% A dcolumn type "d" that aligns numbers on the decimal point, e.g. d{2.3}
-\newcolumntype{d}[1]{D{.}{.}{#1}}
-
-
-%%%% Custom configuration -----------------------------------------------------
-
-
-
-
 %%%% Paths --------------------------------------------------------------------
 %
-%  Folders searched by \input{...} (tables) and \includegraphics{...} (figures).
-%  Relative to this file. Adjust to wherever your generated assets live.
-\makeatletter
-\def\input@path{{tables/}{figures/}}
-\makeatother
-\graphicspath{{tables/}{figures/}}
-
-\addbibresource{references.bib}
-
+%  Folder searched by \includegraphics{...}. Relative to this file.
+\graphicspath{{figures/}}
 
 %%%% Metadata -----------------------------------------------------------------
-%
-%  The first three names match the paper's Metadata block, so it can be pasted
-%  here; the talk fills in the rest.
 
-\newcommand{\papertitle}{Commitment and present bias: Experimental evidence}
-\newcommand{\paperauthor}{First M.~Last}
-\newcommand{\paperurl}{https://example.com/paper.pdf}
-\newcommand{\talkvenue}{Example Seminar Series}
-\newcommand{\talkdate}{30 June 2026}
-
-\title{\papertitle}
-\author{\paperauthor}
+\title{Commitment and present bias: Experimental evidence}
+\author{First M.~Last}
 \institute{Department of Economics, Example University}
-\date{\talkvenue\\\talkdate}
+\date{Example Seminar Series\\30 June 2026}
 
 
 \begin{document}
@@ -218,31 +175,26 @@
   % [<+->] reveals one item per click.
   \begin{itemize}[<+->]
     \item People plan to act patiently, then take the immediate reward when
-    the moment arrives \parencite{Doe2020,RoeSmith2019}.
-    \item \textcite{LeeKimPark2021} model this as \alert{present bias}: an
-    extra discount on everything that is not ``now.''
-    \item As \citeauthor{Doe2020} (\citeyearlinked{Doe2020}) shows, people who
-    know they are present-biased seek commitment.
+    the moment arrives (Doe 2020)
+    \item \alert{Present bias:} an extra discount on everything that is not
+    ``now'' (Lee, Kim, and Park 2021)
+    \item People who know they are present-biased seek commitment
   \end{itemize}
 \end{frame}
 
 \begin{frame}{This paper}
   \begin{columns}[T]
-    \begin{column}{0.52\textwidth}
+    \begin{column}{0.5\textwidth}
       \begin{itemize}
-        \item Laboratory experiment: a sequence of intertemporal allocation
-        decisions under one of two conditions
+        \item Laboratory experiment: intertemporal allocation decisions under
+        one of two conditions
         \item Estimate a quasi-hyperbolic discounting model
-        \item \alert{Finding:} the treatment lowers the present-bias
-        parameter~$\beta$ and raises demand for commitment
+        \item \alert{Finding:} the treatment lowers present bias and raises
+        demand for commitment
       \end{itemize}
     \end{column}
-    \begin{column}{0.4\textwidth}
-      \centering
-      \begin{tikzpicture}
-        \draw[thick] (0,0) rectangle (5,3);
-        \node at (2.5,1.5) {design schematic};
-      \end{tikzpicture}
+    \begin{column}{0.45\textwidth}
+      \includegraphics[width=\linewidth]{example-image}
     \end{column}
   \end{columns}
 \end{frame}
@@ -251,171 +203,121 @@
 
 \begin{frame}{Quasi-hyperbolic discounting}
   A decision maker values a stream of consumption as
-  \begin{align}
-      U_t &= u(x_t) + \beta \sum_{\tau=1} \delta^\tau\, u(x_{t+\tau}).
-      \label{eq:objective}
-  \end{align}
+  \[
+    U_t = u(x_t) + \beta \sum_{\tau=1}^{T} \delta^\tau u(x_{t+\tau})
+  \]
   \begin{itemize}
-    \item $\beta = 1$: exponential discounting; $\beta < 1$: present bias
-    \item Take-up of the commitment device, $\mybb{1}(\text{commit})$, rises as
-    $\beta$ in \cref{eq:objective} falls
+    \item $\beta = 1$: exponential discounting
+    \item $\beta < 1$: present bias
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Hypotheses}
-  \begin{hypothesis}\label{hyp:main}
-  The treatment lowers the present-bias parameter relative to the control:
-  $\beta_{\text{treat}} < \beta_{\text{control}}$.
-  \end{hypothesis}
+  \begin{block}{Hypothesis 1}
+    The treatment lowers present bias:
+    $\beta_{\text{treat}} < \beta_{\text{control}}$
+  \end{block}
   \pause
-  \begin{hypothesis}\label{hyp:secondary}
-  Participants in the treatment are more likely to take up the commitment
-  device.
-  \end{hypothesis}
+  \begin{block}{Hypothesis 2}
+    The treatment raises take-up of the commitment device
+  \end{block}
 \end{frame}
 
 \begin{frame}{Estimation}
-  % Beamer's own label syntax: the "1" is replaced by the item number. Beamer
-  % does not widen the indent for long labels, so set it to the label's width.
-  \settowidth{\leftmargini}{\bfseries Step 1:\hspace{\labelsep}}
-  \begin{enumerate}[\bfseries Step 1:]
+  \begin{enumerate}
     \item Estimate $\beta$ and $\delta$ for each participant by maximum
-    likelihood from the allocation choices.
-    \item Compare the estimated $\beta$ across conditions, reporting
-    \textcitedash{RoeSmith2019} standard errors to account for the two-stage
-    estimator.
+    likelihood
+    \item Compare $\beta$ across conditions, with standard errors that
+    account for the two-stage estimator
   \end{enumerate}
-  \medskip
-  This tests \cref{hyp:main,hyp:secondary}.
 \end{frame}
 
 \section{Results}
 
-% ---- Table: threeparttable + booktabs + dcolumn (decimal-aligned) ----------
-% The frame title stands in for the paper's \caption. label= makes the frame
-% a link target for the backup slide's return button.
+% label= makes the frame a target for the appendix slide's return button.
+% A generated table drops in the same way: \input{tables/table_regression.tex}
 \begin{frame}[label=results]{Main results}
   \centering
-  \begin{threeparttable}
-    \begin{tabular}{l d{1.3} d{1.3}}
+  \begin{tabular}{lcc}
     \toprule
-                          & \multicolumn{1}{c}{Model 1} & \multicolumn{1}{c}{Model 2} \\
-    \cmidrule(lr){2-2}\cmidrule(lr){3-3}
-    Treatment effect      & 0.281 & 0.895 \\
-    \quad standard error  & 0.044 & 0.052 \\
+                     & Model 1 & Model 2 \\
     \midrule
-    Observations          & \multicolumn{1}{c}{897} & \multicolumn{1}{c}{897} \\
+    Treatment effect & 0.281   & 0.895   \\
+                     & (0.044) & (0.052) \\
+    \midrule
+    Observations     & 897     & 897     \\
     \bottomrule
-    \end{tabular}
-    \begin{tablenotes}\footnotesize
-      \emph{Note:} Estimated treatment effects, with standard errors in the
-      row below.
-    \end{tablenotes}
-  \end{threeparttable}
+  \end{tabular}
+
+  \medskip
+  {\footnotesize Standard errors in parentheses.}
 
   \vfill
   \hfill\hyperlink{robustness}{\beamergotobutton{Robustness}}
 \end{frame}
 
-% ---- Figure: TikZ panel (self-contained, no external files) ----------------
-% \only<2>{...} adds the treatment line on the second click.
+% Build a figure across clicks: export one PDF per step and show each in turn.
 \begin{frame}{Commitment demand}
   \centering
-  \begin{tikzpicture}
-    \draw[thick] (0,0) rectangle (8,4);
-    \node[anchor=north west] at (0.1,3.9) {figure placeholder};
-    \draw[ink,thick] (0.4,0.6) .. controls (3,0.9) and (5,1.3) .. (7.6,1.5);
-    \only<2>{\draw[highlight,very thick]
-      (0.4,0.6) .. controls (3,1.6) and (5,2.6) .. (7.6,3.0);}
-  \end{tikzpicture}
-  \note{Walk through the control line first; the treatment line appears on
+  \includegraphics<1>[height=0.75\textheight]{example-image-a}%
+  \includegraphics<2>[height=0.75\textheight]{example-image-b}
+  \note{Walk through the control group first; the treatment group appears on
   the next click.}
 \end{frame}
-
-% ---- Dropping in externally generated assets (R / Stata / Python) ----------
-% The paper's patterns, one per frame. Beamer's table environment does not
-% float; it is there so a \caption inside the generated file works. pgfplots
-% figures need \usepackage{pgfplots} under "Custom packages".
-%
-% \begin{frame}{Regression results}
-%   \begin{table}
-%     \makebox[\textwidth][c]{\input{table_regression.tex}}
-%   \end{table}
-% \end{frame}
-%
-% \begin{frame}{Estimates}
-%   \centering
-%   \newcommand{\axiswidth}{0.8\textwidth}\newcommand{\axisheight}{0.65\textheight}%
-%   \input{figure_estimates.tex}
-% \end{frame}
-%
-% \begin{frame}{Distribution}
-%   \centering
-%   \includegraphics[width=\textwidth,height=0.8\textheight,keepaspectratio]{figure_histogram.pdf}
-% \end{frame}
 
 \section{Conclusion}
 
 \begin{frame}{Takeaways}
   \begin{itemize}
-    \item A simple change in how future rewards are presented shifts the
-    estimated present-bias parameter
+    \item A simple change in how future rewards are presented lowers present
+    bias
     \item It also raises demand for commitment
-    \item Caveat: a single laboratory sample; field replication is the natural
-    next step
+    \item Caveat: a single laboratory sample; field replication is next
   \end{itemize}
 \end{frame}
 
-% Standout frames are unnumbered. The QR code sits on a white patch so phone
-% cameras can read it against the dark background.
+% Standout frames are unnumbered.
 \begin{frame}[standout]
   Thank you
 
-  \bigskip
-  {\normalsize\mdseries
-  {\setlength{\fboxsep}{6pt}\colorbox{white}{\color{black}\qrcode[height=2.2cm]{\paperurl}}}
-
   \medskip
-  Paper: \url{\paperurl}\\
+  {\normalsize\mdseries
+  Paper: \href{https://example.com/paper.pdf}{example.com/paper.pdf}\\
   \href{mailto:you@example.edu}{you@example.edu}\par}
 \end{frame}
 
-% Frames from here on are left out of the main slide count.
-\appendix
 
-\begin{frame}[allowframebreaks]{References}
-  \printbibliography[heading=none]
-\end{frame}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% BEGIN BACKUP SLIDES %%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% BEGIN APPENDIX %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%  Backup slides answer anticipated questions. Link to one from the main talk
-%  with \hyperlink{<frame label>}{\beamergotobutton{...}} and back with
-%  \beamerreturnbutton. Delete this whole block if the talk has no backup.
+%  Appendix slides answer anticipated questions. They are left out of the
+%  main slide count and numbered "Appendix k / K". Link to one from the main
+%  talk with \hyperlink{<frame label>}{\beamergotobutton{...}} and back with
+%  \beamerreturnbutton. Delete this whole block if the talk has no appendix.
 
-\section{Backup slides}
+% A plain name for the appendix's PDF bookmark; beamer's default goes through
+% \translate, which hyperref warns about.
+\renewcommand{\appendixname}{Appendix}
+\appendix
+\setbeamertemplate{page number in head/foot}{%
+  Appendix \insertframenumberinappendix\,/\,\insertappendixframenumber}
 
 \begin{frame}[label=robustness]{Robustness: excluding inattentive participants}
   \centering
-  \begin{threeparttable}
-    \begin{tabular}{l d{1.3} d{1.3}}
+  \begin{tabular}{lcc}
     \toprule
-                          & \multicolumn{1}{c}{Model 1} & \multicolumn{1}{c}{Model 2} \\
-    \cmidrule(lr){2-2}\cmidrule(lr){3-3}
-    Treatment effect      & 0.264 & 0.871 \\
-    \quad standard error  & 0.049 & 0.058 \\
+                     & Model 1 & Model 2 \\
     \midrule
-    Observations          & \multicolumn{1}{c}{812} & \multicolumn{1}{c}{812} \\
+    Treatment effect & 0.264   & 0.871   \\
+                     & (0.049) & (0.058) \\
+    \midrule
+    Observations     & 812     & 812     \\
     \bottomrule
-    \end{tabular}
-    \begin{tablenotes}\footnotesize
-      \emph{Note:} As in the main results, dropping participants who failed
-      an attention check.
-    \end{tablenotes}
-  \end{threeparttable}
+  \end{tabular}
+
+  \medskip
+  {\footnotesize Standard errors in parentheses.}
 
   \vfill
   \hfill\hyperlink{results}{\beamerreturnbutton{Main results}}

@@ -14,8 +14,10 @@ own content. A matching beamer template for talks sits alongside it (see
 | `paper-template.tex` | The template: a short example paper you replace with your own. |
 | `references.bib` | Example bibliography (biblatex format). Replace with yours. |
 | `paper-template.pdf` | Rendered preview of the template as-is. |
-| `slides-template.tex` | The slides template: a short example talk on the same paper. |
+| `slides-template.tex` | The slides template: a minimal example talk on the same paper. |
 | `slides-template.pdf` | Rendered preview of the slides as-is. |
+| `slides-palettes.tex` | Sample deck: one slide per slide color palette. |
+| `slides-palettes.pdf` | Rendered sample deck, for comparing the palettes. |
 
 ## Compiling
 
@@ -114,67 +116,66 @@ DIV-based alternative), "Supplement page N" footer, reset page numbering,
 
 ## Slides
 
-`slides-template.tex` is a 16:9 beamer talk to go with the paper. Its preamble
-keeps the paper's block structure (scaffolding vs. custom slots, so `prompt.md`
-applies), citation setup, custom commands, paths, and metadata names, so text,
-equations, hypotheses, and tables can be pasted between the two files.
+`slides-template.tex` is a minimal 16:9 beamer talk to go with the paper. It
+does not reuse the paper's preamble: everything is sans-serif, and it loads
+only what slides use.
 
 ```sh
 latexmk -pdf slides-template.tex
 ```
 
 **pdflatex only.** `lualatex` runs but falls back to Latin Modern, because the
-sans-serif math setup (`mathastext`) needs Source Sans Pro's Type 1 fonts.
+sans-serif math (`mathastext`) needs Source Sans Pro's Type 1 fonts.
 
-**Shared with the paper:** `biblatex-chicago` author-date citations, including
-`\citeyearlinked` and `\textcitedash`; `\cref`; `\mybb`; the `d{i.j}` column
-type with `threeparttable` and `booktabs`; the `hypothesis` environment; the
-`tables/`, `figures/`, and `references.bib` paths; and the `\papertitle` /
-`\paperauthor` metadata names.
+**Packages:** the `moloch` theme (the maintained fork of Metropolis);
+`sourcesanspro` and `mathastext` for sans-serif text and math; and `booktabs`
+for tables. Beamer itself supplies graphicx, xcolor, hyperref, and amsmath.
+There is no bibliography machinery: cite by hand, as in "(Doe 2020)".
 
-**Different on slides:**
-- One font stack: text *and* math in Source Sans Pro, the paper's sans.
-  `mathastext` takes math letters, Greek, and digits from the body font, so
-  decimal-aligned table numbers are sans too; `newtxmath` supplies the symbols.
-  The paper's four stacks and `%%arxiv-font%%` tags are dropped, since slides
-  don't go to arXiv.
-- `hypothesis` uses beamer's own theorem machinery (a numbered block) instead
-  of `ntheorem`.
-- **Step 1:** labels use beamer's enumerate syntax, `[\bfseries Step 1:]`,
-  instead of `enumitem`, which breaks beamer lists.
-- `\cref` prints the right text but no hyperlink. Beamer loads hyperref with
-  `implicit=false` (its own `\ref` is unlinked too), so cleveref logs a warning
-  that it cannot add links. Citations are linked as usual.
-- No `\symfootnote` or supplement machinery; backup slides take the
-  supplement's role.
+**Look:**
+- Sans-serif throughout: text, math letters, Greek, and digits are all Source
+  Sans Pro (the paper's sans).
+- One rule, defined once as `\titlerule`: 0.4pt, in the accent color, the width of the
+  text block, set 6pt below the title's baseline. It underlines the title on
+  the title page, every frame, and every section divider, and frame titles
+  start at the text margin, so titles, rules, and body text share one left
+  edge. There are no progress bars; the footer's slide numbers show where the
+  talk is. A dark standout frame closes the talk.
+- Palettes work like the paper's font stacks: several blocks in
+  **Configuration**, exactly one active (uncommented). Each sets five colors:
+  `paper` (background), `ink` (text and titles), `accent` (title rules,
+  bullets, block shading), `highlight` (`\alert`, also set bold), and
+  `closing` (background of the closing "Thank you" slide). The default,
+  palette 0, is **dark rules, vermilion alerts**: dark slate `#23373B` for
+  text, rules, and bullets, vermilion `#D55E00` for alerts, and a charcoal
+  `#333333` closing slide. Set aside for later, numbered 1–6 in order of
+  preference: Paul Tol high-contrast, Monochrome + red, Nord, IBM Carbon,
+  Solarized light, and Okabe–Ito (blue rules, vermilion alerts). `slides-palettes.pdf` has one
+  sample slide per palette, with its closing-slide color in the bottom-right
+  corner. Reuse the hex codes in R / Stata / Python figures so they match the
+  slides.
 
-**Slide features:**
-- The Moloch theme (the maintained fork of Metropolis), restyled light: frame
-  titles on the page background above a thin progress rule, section divider
-  slides, and a dark standout frame for the closing slide.
-- A colorblind-safe Okabe–Ito palette, defined once: `ink` (`#23373B`, text),
-  `accent` (blue `#0072B2`, structure), and `highlight` (vermilion `#D55E00`,
-  `\alert`, also set bold). Use the same names in TikZ, or the same hex codes in
-  R / Stata / Python, to match figures to the slides.
-- Overlays: `[<+->]` lists, `\pause`, and `\only<2>{...}` inside TikZ. Frames
-  are top-aligned (`t`) so content doesn't jump as it appears.
+**Features:**
+- Overlays: `[<+->]` lists, `\pause`, and `\includegraphics<1>{...}` /
+  `\includegraphics<2>{...}` to build a figure across clicks. Frames are
+  top-aligned (`t`) so content doesn't jump as it appears.
 - Handout mode: add `handout` to the class options for one page per frame.
 - Speaker notes with `\note{...}`; uncomment the `show notes on second screen`
   line for a presenter tool such as pdfpc.
-- Backup slides after `\appendix`, kept out of the footer's total (the "n / N"
-  counter counts the main talk only), with `\beamergotobutton` /
-  `\beamerreturnbutton` links between a main frame and its backup.
-- A closing slide with the paper link, a QR code (`qrcode`), and email, then a
-  references frame that continues across pages if needed.
+- Appendix slides after `\appendix`. The main talk's footer reads "n / N",
+  with N counting the main talk only; appendix slides read "Appendix k / K".
+  `\beamergotobutton` / `\beamerreturnbutton` link a main frame and its
+  appendix frame.
 
 **Slides checklist:**
-1. Set the **Metadata** block: `\papertitle` and `\paperauthor` (paste from the
-   paper), `\paperurl`, `\talkvenue`, `\talkdate`, and `\institute`.
-2. Replace the example frames; delete the backup block if you don't need it.
-3. Drop in generated tables and figures with the commented examples after the
-   figure frame (pgfplots figures need `\usepackage{pgfplots}`).
-4. To rebrand, change the three palette colors in **Boilerplate
-   configuration**.
+1. Set the title, author, institute, and date in the **Metadata** block.
+2. Replace the example frames; if you don't need the appendix, delete its
+   block and the Robustness button on the results frame.
+3. Put figures in `figures/`; `\input{tables/...}` generated tables.
+4. To change colors, comment out the active palette block in
+   **Configuration** and uncomment another (or add your own block). If you
+   add or change a palette, add or change its `\showpalette` line in
+   `slides-palettes.tex` so the sample deck stays complete.
 
 ## Notes
 
@@ -189,5 +190,6 @@ type with `threeparttable` and `booktabs`; the `hypothesis` environment; the
   `tabfigures`, `threeparttable`, `dcolumn`, `subfig`, `pgfplots`, `contour`,
   `adjustbox`. If `tabfigures` is missing, comment out its `\usepackage` line —
   it only governs lining vs. old-style digits.
-- The slides also use `moloch`, `mathastext`, and `qrcode`, all free and in a
-  full TeX Live (tested with TeX Live 2025: moloch v0.6.0).
+- The slides use `moloch`, `sourcesanspro`, and `mathastext`; the placeholder
+  images come from `mwe`. All are free and in a full TeX Live (tested with TeX
+  Live 2025: moloch v0.6.0).

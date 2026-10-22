@@ -1,0 +1,125 @@
+%==============================================================================
+%  SLIDE COLOR PALETTES  (samples for slides-template.tex)
+%------------------------------------------------------------------------------
+%  One slide per palette block in slides-template.tex, in the template's
+%  order: a sample frame, with the palette's closing-slide background shown in
+%  the bottom-right corner. The preamble repeats the template's look; if you
+%  change one, change the other to match.
+%==============================================================================
+%  COMPILE (pdflatex only: the sans-serif math needs Type 1 fonts):
+%      latexmk -pdf filename
+%  (two passes: the corner tile and color codes are placed on the second)
+%==============================================================================
+
+\documentclass[aspectratio=169,11pt,t]{beamer}
+
+%%%% Theme --------------------------------------------------------------------
+
+\usetheme{moloch}
+
+%%%% Font face packages -------------------------------------------------------
+
+\usepackage[semibold]{sourcesanspro}
+\usepackage[LGR,T1]{fontenc}
+\usefonttheme{professionalfonts}
+\usepackage[italic,LGRgreek]{mathastext}
+
+%%%% Packages -----------------------------------------------------------------
+
+\usepackage{booktabs}
+
+%%%% Configuration ------------------------------------------------------------
+
+% \usepalette{paper}{ink}{accent}{highlight}{closing}: the five palette colors
+% as hex codes (the values in the template's palette blocks), for the frames
+% that follow.
+\newcommand{\usepalette}[5]{%
+  \definecolor{paper}{HTML}{#1}\definecolor{ink}{HTML}{#2}%
+  \definecolor{accent}{HTML}{#3}\definecolor{highlight}{HTML}{#4}%
+  \definecolor{closing}{HTML}{#5}%
+  \def\palettecodes{Background \##1\quad Text \##2\quad Rules and bullets
+    \##3\\Highlights \##4\quad Closing slide \##5}}
+\usepalette{FAFAFA}{23373B}{23373B}{D55E00}{333333}
+
+% Colors and frame titles as in slides-template.tex.
+\setbeamercolor{normal text}{fg=ink,bg=paper}
+\setbeamercolor{structure}{fg=accent}
+\setbeamercolor{frametitle}{fg=ink,bg=}
+\setbeamercolor{block title}{fg=ink,bg=accent!15}
+\setbeamercolor{block body}{bg=accent!5}
+\setbeamercolor{alerted text}{fg=highlight}
+\setbeamerfont{alerted text}{series=\bfseries}
+
+\newcommand{\titlerule}{%
+  \par\kern-\prevdepth\kern6pt\nointerlineskip
+  \noindent{\color{accent}\rule{\textwidth}{0.4pt}}\par}
+\setbeamertemplate{frametitle}{%
+  \begin{beamercolorbox}[wd=\paperwidth,leftskip=1cm,rightskip=1cm plus 1fil]{frametitle}%
+    \rule{0pt}{4ex}\insertframetitle\par
+    {\usebeamerfont{framesubtitle}\insertframesubtitle\par}%
+    \titlerule
+  \end{beamercolorbox}%
+}
+
+% No page numbers: the bottom-right corner holds the closing-slide tile.
+\setbeamertemplate{page number in head/foot}{}
+
+% \showpalette{name}{paper}{ink}{accent}{highlight}{closing}: one sample
+% frame in that palette. Bottom left: the color codes. Bottom right: a small
+% tile in the closing slide's colors. Both sit 1cm in from the sides.
+\newcommand{\showpalette}[6]{%
+  \usepalette{#2}{#3}{#4}{#5}{#6}%
+  \frame{\frametitle{#1}%
+    \begin{columns}[T,onlytextwidth]
+      \begin{column}{0.48\textwidth}
+        \begin{itemize}
+          \item People plan to act patiently
+          \item \alert{Present bias:} an extra discount on ``now''
+          \item Demand for commitment rises
+        \end{itemize}
+        \medskip
+        \begin{block}{Hypothesis 1}
+          The treatment lowers present bias:
+          $\beta_{\text{treat}} < \beta_{\text{control}}$
+        \end{block}
+      \end{column}
+      \begin{column}{0.48\textwidth}
+        \centering
+        \begin{tabular}{lcc}
+          \toprule
+                           & Model 1 & Model 2 \\
+          \midrule
+          Treatment effect & 0.281   & 0.895   \\
+                           & (0.044) & (0.052) \\
+          \bottomrule
+        \end{tabular}
+
+        \bigskip
+        \beamergotobutton{Robustness}
+      \end{column}
+    \end{columns}
+    \begin{tikzpicture}[remember picture,overlay]
+      \node[anchor=south west,align=left,inner sep=0pt,font=\footnotesize]
+        at ([xshift=1cm,yshift=0.8cm]current page.south west) {\palettecodes};
+      \node[anchor=south east,fill=closing,text=paper,font=\small\bfseries,
+            minimum width=3.6cm,minimum height=2.025cm]
+        at ([xshift=-1cm,yshift=0.8cm]current page.south east) {Thank you};
+    \end{tikzpicture}}%
+}
+
+%%%% Metadata -----------------------------------------------------------------
+
+\title{Slide color palettes}
+
+
+\begin{document}
+
+\showpalette{0. Dark rules, vermilion alerts}{FAFAFA}{23373B}{23373B}{D55E00}{333333}
+\showpalette{1. Paul Tol high-contrast}{FAFAFA}{1F1F1F}{004488}{BB5566}{1F1F1F}
+\showpalette{2. Monochrome + red}{FFFFFF}{1A1A1A}{5C5C5C}{C62828}{1A1A1A}
+\showpalette{3. Nord}{FAFAFA}{2E3440}{5E81AC}{BF616A}{2E3440}
+\showpalette{4. IBM Carbon}{FFFFFF}{161616}{0F62FE}{DA1E28}{161616}
+\showpalette{5. Solarized light}{FDF6E3}{073642}{268BD2}{DC322F}{073642}
+\showpalette{6. Okabe–Ito: blue rules, vermilion alerts}{FAFAFA}{23373B}{0072B2}{D55E00}{333333}
+
+\end{document}
