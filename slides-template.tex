@@ -30,11 +30,13 @@
 
 %%%% Font face packages -------------------------------------------------------
 %
-%  Source Sans Pro for text and math alike. mathastext takes the math letters,
+%  Source Sans Pro for text and math alike, and its monospaced companion,
+%  Source Code Pro, for \texttt and code. mathastext takes the math letters,
 %  digits, and Greek (via the LGR encoding) from the text font;
 %  professionalfonts stops beamer from swapping in its own math fonts first.
 
 \usepackage[semibold]{sourcesanspro}
+\usepackage{sourcecodepro}
 \usepackage[LGR,T1]{fontenc}
 \usefonttheme{professionalfonts}
 \usepackage[italic,LGRgreek]{mathastext}
@@ -110,8 +112,13 @@
 \setbeamercolor{palette primary}{fg=paper,bg=closing}
 \setbeamercolor{structure}{fg=accent}
 \setbeamercolor{frametitle}{fg=ink,bg=}
+% Blocks (and theorems) share one shaded title bar. Alert blocks tint theirs
+% with the highlight color; example blocks use the accent color for the title.
 \setbeamercolor{block title}{fg=ink,bg=accent!15}
+\setbeamercolor{block title alerted}{fg=highlight,bg=highlight!12}
+\setbeamercolor{block title example}{fg=accent,bg=accent!15}
 \setbeamercolor{block body}{bg=accent!5}
+\setbeamercolor{example text}{fg=accent}
 % Alerts are also bold, because vermilion is a little light for
 % normal-weight text on a white slide.
 \setbeamercolor{alerted text}{fg=highlight}
@@ -125,12 +132,18 @@
 \newcommand{\titlerule}{%
   \par\kern-\prevdepth\kern6pt\nointerlineskip
   \noindent{\color{accent}\rule{\textwidth}{0.4pt}}\par}
+% Subtitles (\subtitle on the title page, \framesubtitle on frames) sit in
+% regular weight just below their title, above the rule.
 \setbeamertemplate{title}{\raggedright\inserttitle\par}
+\setbeamertemplate{subtitle}{\raggedright\insertsubtitle\par}
 \setbeamertemplate{title separator}{\titlerule\vspace*{0.8em}}
+\setbeamerfont{framesubtitle}{size=\small,series=\mdseries}
 \setbeamertemplate{frametitle}{%
   \begin{beamercolorbox}[wd=\paperwidth,leftskip=1cm,rightskip=1cm plus 1fil]{frametitle}%
     \rule{0pt}{4ex}\insertframetitle\par
-    {\usebeamerfont{framesubtitle}\insertframesubtitle\par}%
+    \ifx\insertframesubtitle\empty\else
+      \vspace{2pt}{\usebeamerfont{framesubtitle}\insertframesubtitle\par}%
+    \fi
     \titlerule
   \end{beamercolorbox}%
 }
@@ -155,6 +168,7 @@
 %%%% Metadata -----------------------------------------------------------------
 
 \title{Commitment and present bias: Experimental evidence}
+%\subtitle{A subtitle, if the talk needs one}
 \author{First M.~Last}
 \institute{Department of Economics, Example University}
 \date{Example Seminar Series\\30 June 2026}
@@ -168,6 +182,11 @@
 
 % The title page is unnumbered; each \section adds an unnumbered divider.
 \maketitle
+
+% \tableofcontents lists the sections and subsections below.
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
 
 \section{Introduction}
 
@@ -200,8 +219,11 @@
 \end{frame}
 
 \section{Model}
+\subsection{Setup}
 
+% \framesubtitle adds a line under the frame title.
 \begin{frame}{Quasi-hyperbolic discounting}
+  \framesubtitle{Present bias in one parameter}
   A decision maker values a stream of consumption as
   \[
     U_t = u(x_t) + \beta \sum_{\tau=1}^{T} \delta^\tau u(x_{t+\tau})
@@ -210,6 +232,26 @@
     \item $\beta = 1$: exponential discounting
     \item $\beta < 1$: present bias
   \end{itemize}
+  \begin{exampleblock}{Example}
+    With $\beta = 0.7$ and $\delta = 1$, \$110 tomorrow is worth \$77 today,
+    so \$100 today wins. A week earlier, the same person prefers the \$110.
+  \end{exampleblock}
+\end{frame}
+
+\subsection{Predictions}
+
+% Beamer's built-in theorem environments (theorem, lemma, corollary,
+% definition, example) and proof all work without extra setup.
+\begin{frame}{The value of commitment}
+  \begin{theorem}
+    A present-biased person who knows that $\beta < 1$ strictly prefers to
+    remove a tempting early option in advance.
+  \end{theorem}
+  \begin{proof}[Proof sketch]
+    Ahead of time, the person ranks the options using $\delta$ alone; at the
+    moment of choice, the extra factor $\beta$ reverses that ranking.
+    Removing the early option prevents the reversal.
+  \end{proof}
 \end{frame}
 
 \begin{frame}{Hypotheses}
@@ -221,6 +263,22 @@
   \begin{block}{Hypothesis 2}
     The treatment raises take-up of the commitment device
   \end{block}
+\end{frame}
+
+\section{Design}
+
+% A description list. The optional [Commitment] sets the label width to the
+% longest label, so the entries line up.
+\begin{frame}{Experimental design}
+  \begin{description}[Commitment]
+    \item[Control] Rewards shown as calendar dates
+    \item[Treatment] Rewards shown as delays from today
+    \item[Commitment] An option to lock in the later reward in advance
+  \end{description}
+  \medskip
+  897 participants, randomly assigned to the two
+  conditions.\footnote{Pre-registered at the AEA RCT Registry
+  (AEARCTR-0000000).}
 \end{frame}
 
 \begin{frame}{Estimation}
@@ -235,22 +293,28 @@
 \section{Results}
 
 % label= makes the frame a target for the appendix slide's return button.
+% On the second click, \alert<2> highlights one estimate and
+% \uncover<2> shows the line below the table. \uncover keeps that line's space
+% reserved, so nothing moves when it appears (\only would not).
 % A generated table drops in the same way: \input{tables/table_regression.tex}
 \begin{frame}[label=results]{Main results}
   \centering
   \begin{tabular}{lcc}
     \toprule
-                     & Model 1 & Model 2 \\
+                     & Model 1          & Model 2 \\
     \midrule
-    Treatment effect & 0.281   & 0.895   \\
-                     & (0.044) & (0.052) \\
+    Treatment effect & \alert<2>{0.281} & 0.895   \\
+                     & (0.044)          & (0.052) \\
     \midrule
-    Observations     & 897     & 897     \\
+    Observations     & 897              & 897     \\
     \bottomrule
   \end{tabular}
 
   \medskip
   {\footnotesize Standard errors in parentheses.}
+
+  \bigskip
+  \uncover<2>{Model 1: an effect more than six standard errors from zero}
 
   \vfill
   \hfill\hyperlink{robustness}{\beamergotobutton{Robustness}}
@@ -265,6 +329,13 @@
   the next click.}
 \end{frame}
 
+% A full-screen figure: [plain] drops the title and footer, and the
+% background template fills the whole slide with the image.
+{\usebackgroundtemplate{%
+  \includegraphics[width=\paperwidth,height=\paperheight]{example-image-16x9}}
+\begin{frame}[plain]
+\end{frame}}
+
 \section{Conclusion}
 
 \begin{frame}{Takeaways}
@@ -272,8 +343,13 @@
     \item A simple change in how future rewards are presented lowers present
     bias
     \item It also raises demand for commitment
-    \item Caveat: a single laboratory sample; field replication is next
+    \begin{itemize}
+      \item Take-up of the commitment device rises in the treatment group
+    \end{itemize}
   \end{itemize}
+  \begin{alertblock}{Caveat}
+    A single laboratory sample; field replication is the natural next step.
+  \end{alertblock}
 \end{frame}
 
 % Standout frames are unnumbered.
@@ -321,6 +397,15 @@
 
   \vfill
   \hfill\hyperlink{results}{\beamerreturnbutton{Main results}}
+\end{frame}
+
+% [fragile] lets a frame hold verbatim text, such as code.
+\begin{frame}[fragile]{Replication}
+  Every table and figure is rebuilt from the project folder:
+\begin{verbatim}
+cd programs
+Rscript main.R    # writes ../tables/ and ../figures/
+\end{verbatim}
 \end{frame}
 
 \end{document}

@@ -128,19 +128,24 @@ latexmk -pdf slides-template.tex
 sans-serif math (`mathastext`) needs Source Sans Pro's Type 1 fonts.
 
 **Packages:** the `moloch` theme (the maintained fork of Metropolis);
-`sourcesanspro` and `mathastext` for sans-serif text and math; and `booktabs`
+`sourcesanspro` and `mathastext` for sans-serif text and math;
+`sourcecodepro` for sans-serif monospace (`\texttt`, code); and `booktabs`
 for tables. Beamer itself supplies graphicx, xcolor, hyperref, and amsmath.
 There is no bibliography machinery: cite by hand, as in "(Doe 2020)".
 
 **Look:**
 - Sans-serif throughout: text, math letters, Greek, and digits are all Source
-  Sans Pro (the paper's sans).
-- One rule, defined once as `\titlerule`: 0.4pt, in the accent color, the width of the
-  text block, set 6pt below the title's baseline. It underlines the title on
-  the title page, every frame, and every section divider, and frame titles
-  start at the text margin, so titles, rules, and body text share one left
-  edge. There are no progress bars; the footer's slide numbers show where the
-  talk is. A dark standout frame closes the talk.
+  Sans Pro (the paper's sans); monospace is its companion, Source Code Pro.
+- One rule, defined once as `\titlerule`: 0.4pt, in the accent color, the
+  width of the text block, set 6pt below the baseline of the title (or
+  subtitle) above it. It underlines the title on the title page, every frame,
+  and every section divider, and frame titles start at the text margin, so
+  titles, rules, and body text share one left edge. Subtitles (`\subtitle`,
+  `\framesubtitle`) sit in regular weight under their title. There are no
+  progress bars; the footer's slide numbers show where the talk is. A dark
+  standout frame closes the talk.
+- Blocks and theorems share one shaded title bar; alert blocks tint theirs
+  with the highlight color.
 - Palettes work like the paper's font stacks: several blocks in
   **Configuration**, exactly one active (uncommented). Each sets five colors:
   `paper` (background), `ink` (text and titles), `accent` (title rules,
@@ -150,15 +155,25 @@ There is no bibliography machinery: cite by hand, as in "(Doe 2020)".
   text, rules, and bullets, vermilion `#D55E00` for alerts, and a charcoal
   `#333333` closing slide. Set aside for later, numbered 1–6 in order of
   preference: Paul Tol high-contrast, Monochrome + red, Nord, IBM Carbon,
-  Solarized light, and Okabe–Ito (blue rules, vermilion alerts). `slides-palettes.pdf` has one
-  sample slide per palette, with its closing-slide color in the bottom-right
-  corner. Reuse the hex codes in R / Stata / Python figures so they match the
-  slides.
+  Solarized light, and Okabe–Ito (blue rules, vermilion alerts).
+  `slides-palettes.pdf` has one sample slide per palette, with its
+  closing-slide color in the bottom-right corner. Reuse the hex codes in R /
+  Stata / Python figures so they match the slides.
 
-**Features:**
-- Overlays: `[<+->]` lists, `\pause`, and `\includegraphics<1>{...}` /
-  `\includegraphics<2>{...}` to build a figure across clicks. Frames are
-  top-aligned (`t`) so content doesn't jump as it appears.
+**Features shown in the example talk:**
+- An outline slide (`\tableofcontents`) listing sections and subsections, and
+  a divider slide for each section.
+- A frame subtitle, a worked example in an `exampleblock`, a `theorem` with a
+  `proof` sketch, hypotheses in plain blocks, and a caveat in an `alertblock`.
+- Bullets with a second level, numbered lists, a description list, a
+  footnote, an equation, a table, and two-column layouts.
+- Overlays: `[<+->]` lists, `\pause`, `\alert<2>{...}` and `\uncover<2>{...}`
+  for a second-click highlight that moves nothing, and
+  `\includegraphics<1>{...}` / `\includegraphics<2>{...}` to build a figure
+  across clicks. Frames are top-aligned (`t`) so content doesn't jump as it
+  appears.
+- A full-screen figure (`[plain]` frame with `\usebackgroundtemplate`).
+- Code on a slide (`[fragile]` frame with `verbatim`), in the appendix.
 - Handout mode: add `handout` to the class options for one page per frame.
 - Speaker notes with `\note{...}`; uncomment the `show notes on second screen`
   line for a presenter tool such as pdfpc.
@@ -190,6 +205,6 @@ There is no bibliography machinery: cite by hand, as in "(Doe 2020)".
   `tabfigures`, `threeparttable`, `dcolumn`, `subfig`, `pgfplots`, `contour`,
   `adjustbox`. If `tabfigures` is missing, comment out its `\usepackage` line —
   it only governs lining vs. old-style digits.
-- The slides use `moloch`, `sourcesanspro`, and `mathastext`; the placeholder
+- The slides use `moloch`, `sourcesanspro`, `sourcecodepro`, and `mathastext`; the placeholder
   images come from `mwe`. All are free and in a full TeX Live (tested with TeX
   Live 2025: moloch v0.6.0).

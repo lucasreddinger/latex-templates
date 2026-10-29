@@ -46,17 +46,23 @@
 \setbeamercolor{structure}{fg=accent}
 \setbeamercolor{frametitle}{fg=ink,bg=}
 \setbeamercolor{block title}{fg=ink,bg=accent!15}
+\setbeamercolor{block title alerted}{fg=highlight,bg=highlight!12}
+\setbeamercolor{block title example}{fg=accent,bg=accent!15}
 \setbeamercolor{block body}{bg=accent!5}
+\setbeamercolor{example text}{fg=accent}
 \setbeamercolor{alerted text}{fg=highlight}
 \setbeamerfont{alerted text}{series=\bfseries}
 
 \newcommand{\titlerule}{%
   \par\kern-\prevdepth\kern6pt\nointerlineskip
   \noindent{\color{accent}\rule{\textwidth}{0.4pt}}\par}
+\setbeamerfont{framesubtitle}{size=\small,series=\mdseries}
 \setbeamertemplate{frametitle}{%
   \begin{beamercolorbox}[wd=\paperwidth,leftskip=1cm,rightskip=1cm plus 1fil]{frametitle}%
     \rule{0pt}{4ex}\insertframetitle\par
-    {\usebeamerfont{framesubtitle}\insertframesubtitle\par}%
+    \ifx\insertframesubtitle\empty\else
+      \vspace{2pt}{\usebeamerfont{framesubtitle}\insertframesubtitle\par}%
+    \fi
     \titlerule
   \end{beamercolorbox}%
 }
