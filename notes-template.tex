@@ -1,0 +1,197 @@
+%==============================================================================
+%  NOTES ON MEASURING DISCOUNTING
+%------------------------------------------------------------------------------
+%==============================================================================
+%  COMPILE from this directory (bibliography uses biblatex + biber):
+%      latexmk -pdf notes_discounting
+%  or manually:
+%      pdflatex notes_discounting
+%      biber    notes_discounting
+%      pdflatex notes_discounting
+%      pdflatex notes_discounting
+%
+%  By default this file uses the free Cochineal stack and builds on any current
+%  TeX Live / MiKTeX. A commented Minion Pro (commercial) stack is included at
+%  the end of the "Font face packages" block for my own non-arXiv builds.
+%==============================================================================
+
+\documentclass[
+    fontsize=12pt,fleqn,
+    letterpaper,oneside,paper=portrait,
+]{scrartcl}
+
+%%%% Font face packages -------------------------------------------------------
+%
+%  Four interchangeable stacks. EXACTLY ONE must be active (uncommented).
+%  Stack 1 (Cochineal, free) is the default and builds on any current TeX Live.
+%  Stack 4 (Minion Pro, commercial) is my personal stack, left commented out.
+%
+%  The %%arxiv-font%% / %%not-arxiv-font%% tags let a build script swap the
+%  active stack automatically: the %%arxiv-font%% lines (Cochineal, free) stay
+%  active for an arXiv upload, the %%not-arxiv-font%% lines (Minion Pro) for
+%  everything else. Keep them if you use such a script; otherwise ignore.
+
+% 1. Cochineal + Source Sans Pro + Inconsolata   <-- DEFAULT (free)
+%    Cochineal is a refined Crimson: a warm, old-style book serif, close in
+%    character to Minion. newtxmath's matching option gives coherent math.
+\usepackage[p,osf]{cochineal}                           % serif %%arxiv-font%%
+\usepackage[cochineal,vvarbb]{newtxmath}                % math  %%arxiv-font%%
+\usepackage[semibold,scaled=0.95]{sourcesanspro}        % sans  %%arxiv-font%%
+\usepackage[scaled=1.04,varqu,varl]{inconsolata}        % mono  %%arxiv-font%%
+
+% 2. Libertinus serif + sans + mono   (free)
+%    The whole family from one source -- the most internally coherent stack.
+%    Math is newtxmath with letterforms matched to Libertine; native Libertinus
+%    Math would need LuaLaTeX/unicode-math, so under pdflatex this is the route.
+%\usepackage{libertinus}                                 % serif + sans + mono
+%\usepackage[libertine,vvarbb]{newtxmath}                % math
+
+% 3. STIX Two (Times-like) + Source Sans Pro + Inconsolata   (free)
+%    Times-flavoured text with the widest math-symbol coverage of these stacks.
+%\usepackage{stix2}                                      % serif + math
+%\usepackage[semibold,scaled=0.95]{sourcesanspro}        % sans
+%\usepackage[scaled=1.04,varqu,varl]{inconsolata}        % mono
+
+% 4. Minion Pro + Source Sans Pro + Inconsolata   (commercial; my personal stack)
+%    My personal stack; Minion Pro must be installed separately. A build script
+%    swaps it in (via the %%not-arxiv-font%% tags) for non-arXiv builds.
+%\usepackage{newtxmath}                                  % math  %%not-arxiv-font%%
+%\usepackage[fullfamily,swash,lf,mathtabular]{MinionPro} % serif %%not-arxiv-font%%
+%\usepackage[semibold,scaled=0.95]{sourcesanspro}        % sans  %%not-arxiv-font%%
+%\usepackage[scaled=1.04,varqu,varl]{inconsolata}        % mono  %%not-arxiv-font%%
+
+
+%%%% Boilerplate packages -----------------------------------------------------
+
+\usepackage{mathtools}
+% tabfigures forces lining (tabular) digits in equations/lists/line numbers
+% even when the text font uses old-style figures. Comment out if not installed.
+\usepackage[eqno,enum,lineno]{tabfigures}
+\usepackage{ragged2e}
+\usepackage{booktabs}
+\usepackage{ntheorem}
+% noibid: CMOS author-date style opposes an ibidem mechanism.
+\usepackage[backend=biber,authordate,noibid]{biblatex-chicago}
+\usepackage{footmisc} % Must load this after biblatex-chicago.
+% One neutral link color avoids the visual clutter of type-coded links.
+% Coloring the border (not the text) keeps printed text black.
+\usepackage[allbordercolors={0.8 0.8 1}]{hyperref}
+% nameinlink makes the whole "Figure 1" a link; noabbrev avoids "fig."
+\usepackage[nameinlink]{cleveref}
+\usepackage{microtype} % improves optical fit
+
+
+%%%% Common packages ----------------------------------------------------------
+
+\usepackage{enumitem}
+% 1in margins on all sides (in place of KOMA's DIV-based type area).
+\usepackage[margin=1in]{geometry}
+% KOMA's page-style package, for the file-name running head (set up below).
+\usepackage{scrlayer-scrpage}
+\usepackage{graphicx}
+
+
+%%%% Custom packages ----------------------------------------------------------
+
+\usepackage{tikz}
+\usepackage{placeins} % \FloatBarrier: print pending floats before the references
+
+
+
+%%%% Boilerplate configuration ------------------------------------------------
+
+% Match \RaggedRight paragraph indent to the normal indent
+\setlength{\RaggedRightParindent}{\parindent}
+
+% Allow math to break across pages
+\allowdisplaybreaks[1]
+
+% Theorem environments (sans-serif bold headings; upright remark text)
+\theoremheaderfont{\normalfont\sffamily\bfseries}
+\theorembodyfont{\itshape}
+\newtheorem{proposition}{Proposition}
+\newtheorem{hypothesis}{Hypothesis}
+\theorembodyfont{\normalfont}
+\newtheorem{remark}{Remark}
+
+\crefname{proposition}{Proposition}{Propositions}
+\Crefname{proposition}{Proposition}{Propositions}
+\crefname{hypothesis}{Hypothesis}{Hypotheses}
+\Crefname{hypothesis}{Hypothesis}{Hypotheses}
+\crefname{remark}{Remark}{Remarks}
+\Crefname{remark}{Remark}{Remarks}
+
+% \citeyearlinked{key}: prints (and links) only the year of a reference
+\DeclareCiteCommand{\citeyearlinked}
+  {\boolfalse{citetracker}%
+   \boolfalse{pagetracker}%
+   \usebibmacro{prenote}}
+  {\ifciteindex
+     {\indexfield{indextitle}}
+     {}%
+   \printtext[bibhyperref]{\printfield[citeyear]{labelyear}}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+% \textcitedash{key}: like \textcite but en-dashes co-authors' names,
+% e.g. "Murphy-Topel standard errors" -> "Murphy--Topel standard errors".
+\newcommand{\textcitedash}[1]{%
+  {%
+  \DeclareDelimFormat{finalnamedelim}{\textendash}%
+  \textcite{#1}%
+  }%
+}
+
+
+%%%% Common configuration -----------------------------------------------------
+
+% \mybb{1} -> blackboard-bold digit, for indicator functions like \mybb{1}(d=2).
+% Math fonts (newtxmath, mathdesign, ...) ship blackboard *letters* but no
+% blackboard *digit*, so this selects the DSSerif font directly (free; the
+% dsserif files are in TeX Live). Since \usefont bypasses the main font, it
+% renders identically under any of the font stacks above -- nothing to swap
+% when you switch to the free stack.
+\newcommand{\mybb}[1]{{\text{{\usefont{U}{DSSerif}{m}{n}#1}}}}
+
+
+
+%%%% Custom configuration -----------------------------------------------------
+
+
+
+
+%%%% Paths --------------------------------------------------------------------
+
+%\addbibresource{notes_discounting.bib}
+
+
+%%%% Metadata -----------------------------------------------------------------
+
+\title{Notes on measuring discounting}
+\author{Lucas Reddinger}
+\date{9 November 2026}
+
+\makeatletter
+\renewcommand{\maketitle}{%
+  \begin{center}
+    {\sffamily\LARGE \@title\par}
+    \vspace{0.25\baselineskip}
+    \@author\\
+    \@date
+  \end{center}
+}
+\makeatother
+
+
+\begin{document}
+
+\maketitle
+\suppressfloats[t]% keep floats from landing above the title
+
+Text.
+
+\section{Defining discounting}\label{sec:definition}
+
+Text
+
+\end{document}
